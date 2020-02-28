@@ -16,12 +16,15 @@ namespace TaoZhugong.Models.Tests
     public class ProductRepositoryTests
     {
         ITaoZhugongDatabaseConnection dbConnection;
+        IAssetRepository assetRepository ;
+
         private IProductRepository productRepository;
         [TestInitialize]
         public void TestInitialize()
         {
             dbConnection = Substitute.For<ITaoZhugongDatabaseConnection>();
-            productRepository = new ProductRepository(dbConnection);
+            assetRepository = Substitute.For<IAssetRepository>();
+            productRepository = new ProductRepository(dbConnection, assetRepository);
         }
 
         #region GetProcutList
@@ -69,6 +72,7 @@ namespace TaoZhugong.Models.Tests
             dbConnection.DidNotReceive().Modified(addproduct, EntityState.Modified);
             dbConnection.Received().Modified(addproduct, EntityState.Added);
             dbConnection.Received(1).SaveChanges();
+            assetRepository.Received(1).AddNewAsset(addproduct);
         }
 
         [TestMethod()]
@@ -87,7 +91,7 @@ namespace TaoZhugong.Models.Tests
             dbConnection.Received(1).Modified(dbData, EntityState.Modified);
             dbConnection.DidNotReceive().Modified(editproduct, EntityState.Added);
             dbConnection.Received(1).SaveChanges();
-
+            assetRepository.DidNotReceive().AddNewAsset(editproduct);
         }
         [TestMethod()]
         public void EditProduct_OldProductNotFound()
@@ -102,6 +106,8 @@ namespace TaoZhugong.Models.Tests
             dbConnection.DidNotReceive().Modified(editproduct, EntityState.Modified);
             dbConnection.DidNotReceive().Modified(editproduct, EntityState.Added);
             dbConnection.DidNotReceive().SaveChanges();
+            assetRepository.DidNotReceive().AddNewAsset(editproduct);
+
         }
         #endregion EditProduct
 

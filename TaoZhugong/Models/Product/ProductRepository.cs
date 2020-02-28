@@ -11,14 +11,18 @@ namespace TaoZhugong.Models
     public class ProductRepository : IProductRepository
     {
         ITaoZhugongDatabaseConnection dbConnection;
+        private IAssetRepository assetRepository;
         public ProductRepository()
         {
             dbConnection = new TaoZhugongDatabaseConnection();
+            assetRepository = new AssetRepository();
         }
 
-        public ProductRepository(ITaoZhugongDatabaseConnection _dbConnection)
+        public ProductRepository(ITaoZhugongDatabaseConnection _dbConnection, IAssetRepository _asset)
         {
             dbConnection = _dbConnection;
+            assetRepository = _asset;
+
         }
 
         public IQueryable<Product> GetProductList()
@@ -28,7 +32,8 @@ namespace TaoZhugong.Models
 
         public string EditProduct(Product product)
         {
-            if (product.ProductSeq != 0)
+            var isNewProduct = product.ProductSeq == 0;
+            if (!isNewProduct)
             {
                 var oldData = dbConnection.QueryableProduct.FirstOrDefault(p => p.ProductSeq == product.ProductSeq);
                 if (oldData==null)
@@ -46,9 +51,14 @@ namespace TaoZhugong.Models
             {
                 dbConnection.Modified(product, EntityState.Added);
             }
+
             try
             {
                 dbConnection.SaveChanges();
+                if (isNewProduct)
+                {
+                    assetRepository.AddNewAsset(product);
+                }
 
                 return "Success";
             }

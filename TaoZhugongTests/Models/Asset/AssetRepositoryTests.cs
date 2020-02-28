@@ -28,6 +28,8 @@ namespace TaoZhugong.Models.Tests
             dbConnection.QueryableProduct.Returns(FakeProduct.ProductList.AsQueryable());
         }
 
+        #region AddNewAsset
+
         [TestMethod()]
         public void AddNewAsset_Success()
         {
@@ -68,5 +70,8 @@ namespace TaoZhugong.Models.Tests
             dbConnection.DidNotReceive().Modified(Arg.Is<Asset>(p => p.ProductSeq == product.ProductSeq), EntityState.Added);
             dbConnection.DidNotReceive().SaveChanges();
         }
+
+        #endregion AddNewAsset
+
     }
 }
