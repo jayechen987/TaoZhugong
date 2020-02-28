@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
+using TaoZhugong.Models.CustomerException;
 using TaoZhugong.Models.DbEntities;
 
 namespace TaoZhugong.Models
@@ -27,10 +28,26 @@ namespace TaoZhugong.Models
 
         public string EditProduct(Product product)
         {
+            if (product.ProductSeq != 0)
+            {
+                var oldData = dbConnection.QueryableProduct.FirstOrDefault(p => p.ProductSeq == product.ProductSeq);
+                if (oldData==null)
+                {
+                    throw new DataNotFoundException();
+                }
 
-            try
+                oldData.ProductName = product.ProductName;
+                oldData.Remark = product.Remark;
+                oldData.Owner = product.Owner;
+                
+                dbConnection.Modified(oldData, EntityState.Modified);
+            }
+            else
             {
                 dbConnection.Modified(product, EntityState.Added);
+            }
+            try
+            {
                 dbConnection.SaveChanges();
 
                 return "Success";

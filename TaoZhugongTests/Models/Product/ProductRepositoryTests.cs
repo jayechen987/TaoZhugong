@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using FluentAssertions;
+using TaoZhugong.Models.CustomerException;
 using TaoZhugong.Models.DbEntities;
 
 namespace TaoZhugong.Models.Tests
@@ -51,18 +52,7 @@ namespace TaoZhugong.Models.Tests
         }
         #endregion GetProcutList
 
-        [Ignore]
-        [TestMethod()]
-        public void EditProduct_Exception()
-        {
-            var prodcut = new Product();
-            //設定存檔時丟Exception
-            dbConnection.SaveChanges().Throws(new Exception());
-
-            Action action = () => { productRepository.EditProduct(prodcut); };
-            action.Should().Throw<Exception>();
-
-        }
+        #region EditProduct
 
         [TestMethod()]
         public void EditProduct_AddProduct()
@@ -75,11 +65,45 @@ namespace TaoZhugong.Models.Tests
 
             Assert.AreEqual(except,actual);
 
-            dbConnection.Received(1).Modified(addproduct,EntityState.Added);
+            dbConnection.DidNotReceive().QueryableProduct.FirstOrDefault(p => p.ProductSeq == addproduct.ProductSeq);
+            dbConnection.DidNotReceive().Modified(addproduct, EntityState.Modified);
+            dbConnection.Received().Modified(addproduct, EntityState.Added);
             dbConnection.Received(1).SaveChanges();
         }
 
-        
+        [TestMethod()]
+        public void EditProduct_EditProduct()
+        {
+            var editproduct = new Product() { ProductSeq = 1, ProductName = "edit product", ProductValue = "value", Owner = "owner" };
+            var dbData = new Product() { ProductSeq = 1, ProductName = "old product", ProductValue = "value", Owner = "owner" };
+            dbConnection.QueryableProduct.ReturnsForAnyArgs(new List<Product>() { dbData }.AsQueryable());
+
+
+            var except = "Success";
+            var actual = productRepository.EditProduct(editproduct);
+
+            Assert.AreEqual(except, actual);
+            dbConnection.Received(1).QueryableProduct.FirstOrDefault(p => p.ProductSeq == editproduct.ProductSeq);
+            dbConnection.Received(1).Modified(editproduct, EntityState.Modified);
+            dbConnection.DidNotReceive().Modified(editproduct, EntityState.Added);
+            dbConnection.Received(1).SaveChanges();
+
+        }
+        [TestMethod()]
+        public void EditProduct_OldProductNotFound()
+        {
+            var editproduct = new Product() { ProductSeq = 1, ProductName = "edit product", ProductValue = "value", Owner = "owner" };
+
+            var except = "Success";
+            Action action = () => { productRepository.EditProduct(editproduct); };
+            action.Should().Throw<DataNotFoundException>();
+
+            dbConnection.Received(1).QueryableProduct.FirstOrDefault(p => p.ProductSeq == editproduct.ProductSeq);
+            dbConnection.DidNotReceive().Modified(editproduct, EntityState.Modified);
+            dbConnection.DidNotReceive().Modified(editproduct, EntityState.Added);
+            dbConnection.DidNotReceive().SaveChanges();
+        }
+        #endregion EditProduct
 
     }
 }

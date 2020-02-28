@@ -112,16 +112,25 @@
         function PostProductForm() {
             var formId = "ProductForm";
             //CheckValid
+            var isValid = true;
             if ($("#Type").val() == "") {
                 ShowAlert(formId, "warning", "請選擇類型!");
-                return false;
+                isValid= false;
             }
             if ($("#ProductName").val() == "") {
                 ShowAlert(formId, "warning", "產品名稱為必要項");
-                return false;
+                isValid= false;
+
             }
-            if ($("#ProdcutValue").val() == "") {
+            if ($("#ProductValue").val() == "") {
                 ShowAlert(formId, "warning", "產品內容為必要項");
+                isValid= false;
+            }
+            if ($("#Owner").val() == "") {
+                ShowAlert(formId, "warning", "請選擇戶頭!");
+                isValid= false;
+            }
+            if (!isValid) {
                 return false;
             }
             var productId = $("#ProductSeq").val();

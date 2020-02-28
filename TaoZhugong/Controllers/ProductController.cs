@@ -39,10 +39,11 @@ namespace TaoZhugong.Controllers
             return PartialView(editModel);
         }
 
+        [HttpPost]
         public JsonResult Edit(Product product)
         {
             string result = "false";
-            if (ModelState.IsValid)
+            //if (ModelState.IsValid)
             {
                 result = productRepository.EditProduct(product);
             }
