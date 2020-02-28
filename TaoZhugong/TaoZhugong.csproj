@@ -1919,6 +1919,7 @@
     <Content Include="Web.config" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Product\List.cshtml" />
+    <Content Include="Views\Product\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -1963,6 +1964,9 @@
     <Compile Include="Models\PartialModel\ProductPartial.cs" />
     <Compile Include="Models\Product\IProductRepository.cs" />
     <Compile Include="Models\Product\ProductRepository.cs" />
+    <Compile Include="Models\WebProfile\DDLRepository.cs" />
+    <Compile Include="Models\WebProfile\Enum\EnumTool.cs" />
+    <Compile Include="Models\WebProfile\Enum\ProductType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
