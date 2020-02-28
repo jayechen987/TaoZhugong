@@ -1,0 +1,262 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="TaoZhugongModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Asset">
+          <Key>
+            <PropertyRef Name="Seq" />
+          </Key>
+          <Property Name="Seq" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductSeq" Type="int" Nullable="false" />
+          <Property Name="Num" Type="int" Nullable="false" />
+          <Property Name="TotalPrice" Type="float" Nullable="false" />
+          <Property Name="StockDividends" Type="int" Nullable="false" />
+          <Property Name="CashDividends" Type="int" Nullable="false" />
+          <Property Name="CreatTime" Type="date" Nullable="false" />
+          <Property Name="UpdateTime" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Bookkeeping">
+          <Key>
+            <PropertyRef Name="Seq" />
+          </Key>
+          <Property Name="Seq" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductSeq" Type="int" Nullable="false" />
+          <Property Name="Type" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="RelatedSeq" Type="int" Nullable="false" />
+          <Property Name="Amount" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Dividends">
+          <Key>
+            <PropertyRef Name="Seq" />
+          </Key>
+          <Property Name="Seq" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductSeq" Type="int" Nullable="false" />
+          <Property Name="ExRightDate" Type="datetime" Nullable="false" />
+          <Property Name="StockDividend" Type="float" Nullable="false" />
+          <Property Name="CashDividends" Type="float" Nullable="false" />
+          <Property Name="DividendDate" Type="datetime" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="TransactionRecordSeq" Type="int" Nullable="false" />
+          <Property Name="StockPrice" Type="float" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="ProductSeq" />
+          </Key>
+          <Property Name="ProductSeq" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Type" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ProductName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ProductValue" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Owner" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Remark" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="TransactionRecord">
+          <Key>
+            <PropertyRef Name="Seq" />
+          </Key>
+          <Property Name="Seq" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductSeq" Type="int" Nullable="false" />
+          <Property Name="Num" Type="int" Nullable="false" />
+          <Property Name="InStock" Type="int" Nullable="false" />
+          <Property Name="UnitPrice" Type="float" Nullable="false" />
+          <Property Name="TotalPrice" Type="float" Nullable="false" />
+          <Property Name="SalePrice" Type="float" />
+          <Property Name="AdministractionFee" Type="int" Nullable="false" />
+          <Property Name="SaleTax" Type="int" />
+          <Property Name="TransactionTime" Type="date" Nullable="false" />
+          <Property Name="CreateTime" Type="date" Nullable="false" />
+          <Property Name="Remark" Type="nvarchar(max)" />
+          <Property Name="SaleTime" Type="date" />
+        </EntityType>
+        <EntityContainer Name="TaoZhugongModelStoreContainer">
+          <EntitySet Name="Asset" EntityType="Self.Asset" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Bookkeeping" EntityType="Self.Bookkeeping" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Dividends" EntityType="Self.Dividends" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TransactionRecord" EntityType="Self.TransactionRecord" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TaoZhugongModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Asset">
+          <Key>
+            <PropertyRef Name="Seq" />
+          </Key>
+          <Property Name="Seq" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductSeq" Type="Int32" Nullable="false" />
+          <Property Name="Num" Type="Int32" Nullable="false" />
+          <Property Name="TotalPrice" Type="Double" Nullable="false" />
+          <Property Name="StockDividends" Type="Int32" Nullable="false" />
+          <Property Name="CashDividends" Type="Int32" Nullable="false" />
+          <Property Name="CreatTime" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="UpdateTime" Type="DateTime" Nullable="false" Precision="0" />
+        </EntityType>
+        <EntityType Name="Bookkeeping">
+          <Key>
+            <PropertyRef Name="Seq" />
+          </Key>
+          <Property Name="Seq" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductSeq" Type="Int32" Nullable="false" />
+          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RelatedSeq" Type="Int32" Nullable="false" />
+          <Property Name="Amount" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="0" />
+        </EntityType>
+        <EntityType Name="Dividends">
+          <Key>
+            <PropertyRef Name="Seq" />
+          </Key>
+          <Property Name="Seq" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductSeq" Type="Int32" Nullable="false" />
+          <Property Name="ExRightDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="StockDividend" Type="Double" Nullable="false" />
+          <Property Name="CashDividends" Type="Double" Nullable="false" />
+          <Property Name="DividendDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TransactionRecordSeq" Type="Int32" Nullable="false" />
+          <Property Name="StockPrice" Type="Double" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="ProductSeq" />
+          </Key>
+          <Property Name="ProductSeq" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProductName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProductValue" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Owner" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Remark" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="TransactionRecord">
+          <Key>
+            <PropertyRef Name="Seq" />
+          </Key>
+          <Property Name="Seq" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductSeq" Type="Int32" Nullable="false" />
+          <Property Name="Num" Type="Int32" Nullable="false" />
+          <Property Name="InStock" Type="Int32" Nullable="false" />
+          <Property Name="UnitPrice" Type="Double" Nullable="false" />
+          <Property Name="TotalPrice" Type="Double" Nullable="false" />
+          <Property Name="SalePrice" Type="Double" />
+          <Property Name="AdministractionFee" Type="Int32" Nullable="false" />
+          <Property Name="SaleTax" Type="Int32" />
+          <Property Name="TransactionTime" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Remark" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SaleTime" Type="DateTime" Precision="0" />
+        </EntityType>
+        <EntityContainer Name="TaoZhugongEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Asset" EntityType="Self.Asset" />
+          <EntitySet Name="Bookkeeping" EntityType="Self.Bookkeeping" />
+          <EntitySet Name="Dividends" EntityType="Self.Dividends" />
+          <EntitySet Name="Product" EntityType="Self.Product" />
+          <EntitySet Name="TransactionRecord" EntityType="Self.TransactionRecord" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TaoZhugongModelStoreContainer" CdmEntityContainer="TaoZhugongEntities">
+          <EntitySetMapping Name="Asset">
+            <EntityTypeMapping TypeName="TaoZhugongModel.Asset">
+              <MappingFragment StoreEntitySet="Asset">
+                <ScalarProperty Name="Seq" ColumnName="Seq" />
+                <ScalarProperty Name="ProductSeq" ColumnName="ProductSeq" />
+                <ScalarProperty Name="Num" ColumnName="Num" />
+                <ScalarProperty Name="TotalPrice" ColumnName="TotalPrice" />
+                <ScalarProperty Name="StockDividends" ColumnName="StockDividends" />
+                <ScalarProperty Name="CashDividends" ColumnName="CashDividends" />
+                <ScalarProperty Name="CreatTime" ColumnName="CreatTime" />
+                <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Bookkeeping">
+            <EntityTypeMapping TypeName="TaoZhugongModel.Bookkeeping">
+              <MappingFragment StoreEntitySet="Bookkeeping">
+                <ScalarProperty Name="Seq" ColumnName="Seq" />
+                <ScalarProperty Name="ProductSeq" ColumnName="ProductSeq" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="RelatedSeq" ColumnName="RelatedSeq" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Dividends">
+            <EntityTypeMapping TypeName="TaoZhugongModel.Dividends">
+              <MappingFragment StoreEntitySet="Dividends">
+                <ScalarProperty Name="Seq" ColumnName="Seq" />
+                <ScalarProperty Name="ProductSeq" ColumnName="ProductSeq" />
+                <ScalarProperty Name="ExRightDate" ColumnName="ExRightDate" />
+                <ScalarProperty Name="StockDividend" ColumnName="StockDividend" />
+                <ScalarProperty Name="CashDividends" ColumnName="CashDividends" />
+                <ScalarProperty Name="DividendDate" ColumnName="DividendDate" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="TransactionRecordSeq" ColumnName="TransactionRecordSeq" />
+                <ScalarProperty Name="StockPrice" ColumnName="StockPrice" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Product">
+            <EntityTypeMapping TypeName="TaoZhugongModel.Product">
+              <MappingFragment StoreEntitySet="Product">
+                <ScalarProperty Name="ProductSeq" ColumnName="ProductSeq" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="ProductValue" ColumnName="ProductValue" />
+                <ScalarProperty Name="Owner" ColumnName="Owner" />
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TransactionRecord">
+            <EntityTypeMapping TypeName="TaoZhugongModel.TransactionRecord">
+              <MappingFragment StoreEntitySet="TransactionRecord">
+                <ScalarProperty Name="Seq" ColumnName="Seq" />
+                <ScalarProperty Name="ProductSeq" ColumnName="ProductSeq" />
+                <ScalarProperty Name="Num" ColumnName="Num" />
+                <ScalarProperty Name="InStock" ColumnName="InStock" />
+                <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+                <ScalarProperty Name="TotalPrice" ColumnName="TotalPrice" />
+                <ScalarProperty Name="SalePrice" ColumnName="SalePrice" />
+                <ScalarProperty Name="AdministractionFee" ColumnName="AdministractionFee" />
+                <ScalarProperty Name="SaleTax" ColumnName="SaleTax" />
+                <ScalarProperty Name="TransactionTime" ColumnName="TransactionTime" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="SaleTime" ColumnName="SaleTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="無" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
