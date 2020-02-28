@@ -27,7 +27,7 @@ namespace TaoZhugong.Models
 
         public IQueryable<Product> GetProductList()
         {
-            return dbConnection.QueryableProduct;
+            return dbConnection.QueryableProducts;
         }
 
         public string EditProduct(Product product)
@@ -35,7 +35,7 @@ namespace TaoZhugong.Models
             var isNewProduct = product.ProductSeq == 0;
             if (!isNewProduct)
             {
-                var oldData = dbConnection.QueryableProduct.FirstOrDefault(p => p.ProductSeq == product.ProductSeq);
+                var oldData = dbConnection.QueryableProducts.FirstOrDefault(p => p.ProductSeq == product.ProductSeq);
                 if (oldData==null)
                 {
                     throw new DataNotFoundException();

@@ -33,7 +33,7 @@ namespace TaoZhugong.Models.Tests
         public void GetProductList_NoData()
         {
             //設定環境
-            dbConnection.QueryableProduct.ReturnsForAnyArgs(new List<Product>().AsQueryable());
+            dbConnection.QueryableProducts.ReturnsForAnyArgs(new List<Product>().AsQueryable());
 
             var expect = new List<Product>().AsQueryable();
             var actual = productRepository.GetProductList();
@@ -46,7 +46,7 @@ namespace TaoZhugong.Models.Tests
         public void GetProductList_HaveData()
         {
             var returnList = new List<Product>() { new Product() { ProductSeq = 1 } };
-            dbConnection.QueryableProduct.ReturnsForAnyArgs(returnList.AsQueryable());
+            dbConnection.QueryableProducts.ReturnsForAnyArgs(returnList.AsQueryable());
 
             var expect = returnList.AsQueryable();
             var actual = productRepository.GetProductList();
@@ -68,7 +68,7 @@ namespace TaoZhugong.Models.Tests
 
             Assert.AreEqual(except,actual);
 
-            dbConnection.DidNotReceive().QueryableProduct.FirstOrDefault(p => p.ProductSeq == addproduct.ProductSeq);
+            dbConnection.DidNotReceive().QueryableProducts.FirstOrDefault(p => p.ProductSeq == addproduct.ProductSeq);
             dbConnection.DidNotReceive().Modified(addproduct, EntityState.Modified);
             dbConnection.Received().Modified(addproduct, EntityState.Added);
             dbConnection.Received(1).SaveChanges();
@@ -80,14 +80,14 @@ namespace TaoZhugong.Models.Tests
         {
             var editproduct = new Product() { ProductSeq = 1, ProductName = "edit product", ProductValue = "value", Owner = "owner" };
             var dbData = new Product() { ProductSeq = 1, ProductName = "old product", ProductValue = "value", Owner = "owner" };
-            dbConnection.QueryableProduct.ReturnsForAnyArgs(new List<Product>() { dbData }.AsQueryable());
+            dbConnection.QueryableProducts.ReturnsForAnyArgs(new List<Product>() { dbData }.AsQueryable());
 
 
             var except = "Success";
             var actual = productRepository.EditProduct(editproduct);
 
             Assert.AreEqual(except, actual);
-            dbConnection.Received(1).QueryableProduct.FirstOrDefault(p => p.ProductSeq == editproduct.ProductSeq);
+            dbConnection.Received(1).QueryableProducts.FirstOrDefault(p => p.ProductSeq == editproduct.ProductSeq);
             dbConnection.Received(1).Modified(dbData, EntityState.Modified);
             dbConnection.DidNotReceive().Modified(editproduct, EntityState.Added);
             dbConnection.Received(1).SaveChanges();
@@ -102,7 +102,7 @@ namespace TaoZhugong.Models.Tests
             Action action = () => { productRepository.EditProduct(editproduct); };
             action.Should().Throw<DataNotFoundException>();
 
-            dbConnection.Received(1).QueryableProduct.FirstOrDefault(p => p.ProductSeq == editproduct.ProductSeq);
+            dbConnection.Received(1).QueryableProducts.FirstOrDefault(p => p.ProductSeq == editproduct.ProductSeq);
             dbConnection.DidNotReceive().Modified(editproduct, EntityState.Modified);
             dbConnection.DidNotReceive().Modified(editproduct, EntityState.Added);
             dbConnection.DidNotReceive().SaveChanges();

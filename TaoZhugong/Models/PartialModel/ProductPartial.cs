@@ -7,10 +7,10 @@ using System.Web;
 
 namespace TaoZhugong.Models.DbEntities
 {
-    [MetadataType(typeof(ProductPartial))]
+    [MetadataType(typeof(ProductMetadata))]
     public partial class Product
     {
-        public class ProductPartial
+        public class ProductMetadata
         {
             [DisplayName("產品編號")]
             public int ProductSeq { get; set; }

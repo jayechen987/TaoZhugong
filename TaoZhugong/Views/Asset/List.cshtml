@@ -1,0 +1,238 @@
+﻿@model IEnumerable<TaoZhugong.Models.DbEntities.Asset>
+
+@{
+    ViewBag.Title = "資產清單";
+}
+
+
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">@ViewBag.Title</h1>
+    <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, please visit the <a target="_blank" href="https://datatables.net">official DataTables documentation</a>.</p>
+
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    <h6 class="m-0 font-weight-bold text-primary">@ViewBag.AssetType</h6>
+
+                </div>
+                <div class="col-sm-12 col-md-6" style="text-align: right;">
+                    <span class="far fa-plus-square" data-toggle="modal" data-target="#transactionEditModal" onclick="GetTransactionEditPage('0',false)"></span>
+                </div>
+            </div>
+
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.ProductName)</th>
+                            <th>@Html.DisplayNameFor(model => model.Num)</th>
+                            <th>@Html.DisplayNameFor(model => model.AveragePrice)</th>
+                            <th>@Html.DisplayNameFor(model => model.BreakevenPoint)</th>
+                            <th>@Html.DisplayNameFor(model => model.TotalPrice)</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.ProductName)</th>
+                            <th>@Html.DisplayNameFor(model => model.Num)</th>
+                            <th>@Html.DisplayNameFor(model => model.AveragePrice)</th>
+                            <th>@Html.DisplayNameFor(model => model.BreakevenPoint)</th>
+                            <th>@Html.DisplayNameFor(model => model.TotalPrice)</th>
+                            <th> </th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(model => item.ProductName)</td>
+                                <td>@Html.DisplayFor(model => item.Num)</td>
+                                <td>@Html.DisplayFor(model => item.AveragePrice)</td>
+                                <td>@Html.DisplayFor(model => item.BreakevenPoint)</td>
+                                <td>@Html.DisplayFor(model => item.TotalPrice)</td>
+                                <td>
+                                    <span class="far fa-plus-square" data-toggle="modal" data-target="#transactionEditModal" onclick="GetTransactionEditPage(@item.ProductSeq,false)"></span> |
+                                    <span class="far fa-minus-square" data-toggle="modal" data-target="#transactionEditModal" onclick="GetTransactionEditPage(@item.ProductSeq,true)"></span> |
+                                    <span class="fas fa-file-alt" onclick="location.href='/Transaction/Detail?productSeq=@item.ProductSeq'"></span> |
+                                    <span class="fas fa-donate" data-toggle="modal" data-target="#dividendsEditModal" onclick="GetDividendsEditPage(@item.ProductSeq,'@item.ProductName')"></span>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="transactionEditModal" tabindex="-1" role="dialog" aria-labelledby="transactionEditModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">交易紀錄</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="postBtn" onclick="PostTransactionForm()">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="dividendsEditModal" tabindex="-1" role="dialog" aria-labelledby="dividendsEditModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="dividendsProductName"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="postBtn" onclick="PostDividendsForm()">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function() {
+
+
+        });
+        function GetTransactionEditPage(productId, soldStatus) {
+            $.ajax({
+                type: "Get",
+                url: "/Transaction/AddTransaction?type=" + '@ViewBag.AssetType' +
+                    "&soldStatus=" +
+                    soldStatus +
+                    "&productSeq=" +
+                    productId,
+                success: function(data) {
+                    $("#transactionEditModal").find(".modal-body").html(data);
+                    //預設交易日為今天
+                    $("#AddTransactionForm").find("[name='TransactionTime']").val('@DateTime.Now.ToString("yyyy-MM-dd")');
+                }
+            });
+        }
+
+        function PostTransactionForm() {
+            var formId = "AddTransactionForm";
+            //CheckValid
+            if ($("#ProductSeq").val() == "") {
+                ShowAlert(formId, "warning","驗證錯誤!", "請選擇產品");
+                return false;
+            }
+            if (parseInt($("#Num").val()) <= 0) {
+                ShowAlert(formId, "warning", "驗證錯誤!","交易數量必須大於0");
+                return false;
+            }
+            if (parseInt($("#UnitPrice").val()) <= 0) {
+                ShowAlert(formId, "warning", "驗證錯誤!","單價必須大於0");
+                return false;
+            }
+            if (parseInt($("#AdministractionFee").val()) <= 0) {
+                ShowAlert(formId, "warning", "驗證錯誤!","手續費必須大於0");
+                return false;
+            }
+            if ($("#TransactionTime").val() == "") {
+                ShowAlert(formId, "warning","驗證錯誤!", "請輸入交易時間");
+                return false;
+            }
+
+            $.ajax({
+                type: "Post",
+                url: "/Transaction/AddTransaction",
+                data: $("#AddTransactionForm").serialize(),
+                success: function(data) {
+                    if (data == "Success") {
+                        $("#transactionEditModal").modal('toggle');
+                        window.location.reload();
+
+                    } else {
+                        ShowAlert(formId, "danger","系統錯誤", "發生未知錯誤");
+                        GetTransactionEditPage(productId);
+                    }
+
+                }
+            });
+        }
+
+        function GetDividendsEditPage(productId, productName) {
+
+            $("#dividendsProductName").html(productName + " 股息");
+
+            $.ajax({
+                type: "Get",
+                url: "/Transaction/AddDividends?productSeq=" + productId,
+                success: function(data) {
+                    $("#dividendsEditModal").find(".modal-body").html(data);
+                }
+            });
+        }
+
+        function PostDividendsForm() {
+            var formId = "AddDividendsForm";
+            //CheckValid
+
+            if ($("#ExRightDate").val() == "") {
+                ShowAlert(formId, "warning","驗證錯誤!", "請輸入除權除息日");
+                return false;
+            }
+            if (parseFloat($("#StockDividend").val()) <= 0) {
+                ShowAlert(formId, "warning", "驗證錯誤!","配股數量必須大於0");
+                return false;
+            }
+            if (parseFloat($("#CashDividends").val()) <= 0) {
+                ShowAlert(formId, "warning", "驗證錯誤!","配息必須大於0");
+                return false;
+            }
+             if ($("#DividendDate").val() == "") {
+                ShowAlert(formId, "warning","驗證錯誤!", "請輸入配股發放日");
+                return false;
+            }
+
+
+            $.ajax({
+                type: "Post",
+                url: "/Transaction/AddDividends",
+                data: $("#"+formId).serialize(),
+                success: function(data) {
+                    if (data == "Success") {
+                        $("#dividendsEditModal").modal('toggle');
+                        window.location.reload();
+
+                    } else {
+                        ShowAlert(formId, "danger","系統錯誤", "發生未知錯誤");
+                        GetTransactionEditPage(productId);
+                    }
+
+                }
+            });
+        }
+
+
+    </script>
+}

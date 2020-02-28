@@ -82,7 +82,9 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="FakeData\FakeAsset.cs" />
     <Compile Include="FakeData\FakeProduct.cs" />
+    <Compile Include="FakeData\FakeTransactionRecord.cs" />
     <Compile Include="Models\Asset\AssetRepositoryTests.cs" />
     <Compile Include="Models\Product\ProductRepositoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

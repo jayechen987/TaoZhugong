@@ -8,7 +8,7 @@ using TaoZhugong.Models.DbEntities;
 
 namespace TaoZhugong.Models
 {
-    public class AssetRepository : IAssetRepository
+    public class AssetRepository :  IAssetRepository
     {
         private ITaoZhugongDatabaseConnection dbConnection;
         public AssetRepository()
@@ -46,17 +46,64 @@ namespace TaoZhugong.Models
 
         }
 
+        public IEnumerable<Asset> GetAssetListByType(string type)
+        {
+            var productList = dbConnection.QueryableProducts.Where(p => p.Type == type).ToList();
+            var productIdList = productList.Select(p => p.ProductSeq).ToList();
+            var holdTrans = dbConnection.QueryableTransactionRecords.Where(p => p.SalePrice == null);
+            var returnList = dbConnection.QueryableAssets.Where(p => productIdList.Contains(p.ProductSeq) && p.Num > 0).ToList().Select(p =>
+            {
+                p.ProductName = !productList.Any(q => q.ProductSeq == p.ProductSeq) ? "查無產品" :
+                    productList.FirstOrDefault(q => q.ProductSeq == p.ProductSeq).ProductName;
+                p.AveragePrice = GetAveragePrice(p);
+                p.BreakevenPoint = GetBreakevenPoint(holdTrans.Where(q => q.ProductSeq == p.ProductSeq));
+                return p;
+            });
+
+            return returnList;
+        }
+
+        #region Tool
+
+        /// <summary>
+        /// 根據資產取均價(不含手續費)
+        /// 計算到小數點2位
+        /// </summary>
+        /// <param name="asset">單筆資產</param>
+        /// <returns></returns>
+        public double GetAveragePrice(Asset asset)
+        {
+            return asset.Num == 0 ? 0 : Math.Round(asset.TotalPrice / asset.Num, 2);
+        }
+
+        /// <summary>
+        /// 損益平衡點
+        /// 計算到小數點後2位
+        /// </summary>
+        /// <param name="productTrans">持有的交易紀錄(尚未售出)</param>
+        /// <returns></returns>
+        public double GetBreakevenPoint(IQueryable<TransactionRecord> productTrans)
+        {
+            return productTrans.Sum(p => p.InStock) == 0 ? 0 :
+                Math.Round(
+                    (productTrans.Sum(p => p.TotalPrice) + productTrans.Sum(p => p.AdministractionFee))
+                    / productTrans.Sum(p => p.InStock)
+                    , 2);
+        }
+
         private bool CheckAssetIsNew(Product ProductData)
         {
-            return !dbConnection.QueryableAsset.Any(p => p.ProductSeq == ProductData.ProductSeq);
+            return !dbConnection.QueryableAssets.Any(p => p.ProductSeq == ProductData.ProductSeq);
         }
 
         private void CheckProductIsNull(Product ProductData)
         {
-            if (!dbConnection.QueryableProduct.Any(p => p.ProductSeq == ProductData.ProductSeq))
+            if (!dbConnection.QueryableProducts.Any(p => p.ProductSeq == ProductData.ProductSeq))
             {
                 throw new DataNotFoundException();
             }
         }
+        #endregion Tool
+
     }
 }

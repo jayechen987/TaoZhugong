@@ -8,11 +8,11 @@ namespace TaoZhugong.Models.DbEntities
 {
     public interface ITaoZhugongDatabaseConnection
     {
-        IQueryable<Asset> QueryableAsset { get; }
-        IQueryable<Bookkeeping> QueryableBookkeeping { get; }
+        IQueryable<Asset> QueryableAssets { get; }
+        IQueryable<Bookkeeping> QueryableBookkeepings { get; }
         IQueryable<Dividends> QueryableDividends { get; }
-        IQueryable<Product> QueryableProduct { get; }
-        IQueryable<TransactionRecord> QueryableTransactionRecord { get; }
+        IQueryable<Product> QueryableProducts { get; }
+        IQueryable<TransactionRecord> QueryableTransactionRecords { get; }
         void Modified<T>(T model, EntityState entityState) where T : class;
         int SaveChanges();
     }
@@ -21,11 +21,11 @@ namespace TaoZhugong.Models.DbEntities
     {
         TaoZhugongEntities db = new TaoZhugongEntities();
 
-        public IQueryable<Asset> QueryableAsset => db.Asset;
-        public IQueryable<Bookkeeping> QueryableBookkeeping => db.Bookkeeping;
+        public IQueryable<Asset> QueryableAssets => db.Asset;
+        public IQueryable<Bookkeeping> QueryableBookkeepings => db.Bookkeeping;
         public IQueryable<Dividends> QueryableDividends => db.Dividends;
-        public IQueryable<Product> QueryableProduct => db.Product;
-        public IQueryable<TransactionRecord> QueryableTransactionRecord => db.TransactionRecord;
+        public IQueryable<Product> QueryableProducts => db.Product;
+        public IQueryable<TransactionRecord> QueryableTransactionRecords => db.TransactionRecord;
 
         public void Modified<T>(T model, EntityState entityState) where T : class
         {
