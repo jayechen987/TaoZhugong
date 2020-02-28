@@ -82,6 +82,8 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="FakeData\FakeProduct.cs" />
+    <Compile Include="Models\Asset\AssetRepositoryTests.cs" />
     <Compile Include="Models\Product\ProductRepositoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -95,6 +97,7 @@
       <Name>TaoZhugong</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

@@ -1931,6 +1931,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Asset\AssetRepository.cs" />
+    <Compile Include="Models\Asset\IAssetRepository.cs" />
     <Compile Include="Models\CustomerException\DataNotFoundException.cs" />
     <Compile Include="Models\DbEntities\Asset.cs">
       <DependentUpon>TaoZhugong.tt</DependentUpon>
@@ -1963,6 +1965,7 @@
     <Compile Include="Models\DbEntities\TransactionRecord.cs">
       <DependentUpon>TaoZhugong.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\PartialModel\AssetPartial.cs" />
     <Compile Include="Models\PartialModel\ProductPartial.cs" />
     <Compile Include="Models\Product\IProductRepository.cs" />
     <Compile Include="Models\Product\ProductRepository.cs" />

@@ -84,7 +84,7 @@ namespace TaoZhugong.Models.Tests
 
             Assert.AreEqual(except, actual);
             dbConnection.Received(1).QueryableProduct.FirstOrDefault(p => p.ProductSeq == editproduct.ProductSeq);
-            dbConnection.Received(1).Modified(editproduct, EntityState.Modified);
+            dbConnection.Received(1).Modified(dbData, EntityState.Modified);
             dbConnection.DidNotReceive().Modified(editproduct, EntityState.Added);
             dbConnection.Received(1).SaveChanges();
 
