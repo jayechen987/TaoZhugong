@@ -187,6 +187,8 @@
     <Compile Include="Models\DbEntities\TransactionRecord.cs">
       <DependentUpon>TaoZhugong.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Product\IProductRepository.cs" />
+    <Compile Include="Models\Product\ProductRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
