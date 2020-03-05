@@ -20,7 +20,7 @@ namespace TaoZhugong.Models.DbEntities
         public double TotalPrice { get; set; }
         public int StockDividends { get; set; }
         public int CashDividends { get; set; }
-        public System.DateTime CreatTime { get; set; }
+        public System.DateTime CreateTime { get; set; }
         public System.DateTime UpdateTime { get; set; }
     }
 }

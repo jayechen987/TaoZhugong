@@ -36,7 +36,7 @@ namespace TaoZhugong.Models
                     ProductSeq = ProductData.ProductSeq,
                     Num = 0,
                     TotalPrice = 0,
-                    CreatTime = DateTime.Now,
+                    CreateTime = DateTime.Now,
                     UpdateTime = DateTime.Now,
                 };
 

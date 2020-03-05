@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="TaoZhugongModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="TaoZhugongModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Asset">
           <Key>
             <PropertyRef Name="Seq" />
@@ -15,7 +15,7 @@
           <Property Name="TotalPrice" Type="float" Nullable="false" />
           <Property Name="StockDividends" Type="int" Nullable="false" />
           <Property Name="CashDividends" Type="int" Nullable="false" />
-          <Property Name="CreatTime" Type="date" Nullable="false" />
+          <Property Name="CreateTime" Type="date" Nullable="false" />
           <Property Name="UpdateTime" Type="date" Nullable="false" />
         </EntityType>
         <EntityType Name="Bookkeeping">
@@ -79,24 +79,10 @@
           <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TransactionRecord" EntityType="Self.TransactionRecord" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="TaoZhugongModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="Asset">
-          <Key>
-            <PropertyRef Name="Seq" />
-          </Key>
-          <Property Name="Seq" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ProductSeq" Type="Int32" Nullable="false" />
-          <Property Name="Num" Type="Int32" Nullable="false" />
-          <Property Name="TotalPrice" Type="Double" Nullable="false" />
-          <Property Name="StockDividends" Type="Int32" Nullable="false" />
-          <Property Name="CashDividends" Type="Int32" Nullable="false" />
-          <Property Name="CreatTime" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="UpdateTime" Type="DateTime" Nullable="false" Precision="0" />
-        </EntityType>
         <EntityType Name="Bookkeeping">
           <Key>
             <PropertyRef Name="Seq" />
@@ -152,32 +138,31 @@
           <Property Name="SaleTime" Type="DateTime" Precision="0" />
         </EntityType>
         <EntityContainer Name="TaoZhugongEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Asset" EntityType="Self.Asset" />
           <EntitySet Name="Bookkeeping" EntityType="Self.Bookkeeping" />
           <EntitySet Name="Dividends" EntityType="Self.Dividends" />
           <EntitySet Name="Product" EntityType="Self.Product" />
           <EntitySet Name="TransactionRecord" EntityType="Self.TransactionRecord" />
+          <EntitySet Name="Asset" EntityType="TaoZhugongModel.Asset" />
         </EntityContainer>
+        <EntityType Name="Asset">
+          <Key>
+            <PropertyRef Name="Seq" />
+          </Key>
+          <Property Name="Seq" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductSeq" Type="Int32" Nullable="false" />
+          <Property Name="Num" Type="Int32" Nullable="false" />
+          <Property Name="TotalPrice" Type="Double" Nullable="false" />
+          <Property Name="StockDividends" Type="Int32" Nullable="false" />
+          <Property Name="CashDividends" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="UpdateTime" Type="DateTime" Nullable="false" Precision="0" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="TaoZhugongModelStoreContainer" CdmEntityContainer="TaoZhugongEntities">
-          <EntitySetMapping Name="Asset">
-            <EntityTypeMapping TypeName="TaoZhugongModel.Asset">
-              <MappingFragment StoreEntitySet="Asset">
-                <ScalarProperty Name="Seq" ColumnName="Seq" />
-                <ScalarProperty Name="ProductSeq" ColumnName="ProductSeq" />
-                <ScalarProperty Name="Num" ColumnName="Num" />
-                <ScalarProperty Name="TotalPrice" ColumnName="TotalPrice" />
-                <ScalarProperty Name="StockDividends" ColumnName="StockDividends" />
-                <ScalarProperty Name="CashDividends" ColumnName="CashDividends" />
-                <ScalarProperty Name="CreatTime" ColumnName="CreatTime" />
-                <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Bookkeeping">
             <EntityTypeMapping TypeName="TaoZhugongModel.Bookkeeping">
               <MappingFragment StoreEntitySet="Bookkeeping">
@@ -233,6 +218,20 @@
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
                 <ScalarProperty Name="Remark" ColumnName="Remark" />
                 <ScalarProperty Name="SaleTime" ColumnName="SaleTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Asset">
+            <EntityTypeMapping TypeName="TaoZhugongModel.Asset">
+              <MappingFragment StoreEntitySet="Asset">
+                <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="CashDividends" ColumnName="CashDividends" />
+                <ScalarProperty Name="StockDividends" ColumnName="StockDividends" />
+                <ScalarProperty Name="TotalPrice" ColumnName="TotalPrice" />
+                <ScalarProperty Name="Num" ColumnName="Num" />
+                <ScalarProperty Name="ProductSeq" ColumnName="ProductSeq" />
+                <ScalarProperty Name="Seq" ColumnName="Seq" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

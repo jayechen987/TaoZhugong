@@ -25,10 +25,10 @@ namespace TaoZhugong.Models.DbEntities
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Asset> Asset { get; set; }
         public virtual DbSet<Bookkeeping> Bookkeeping { get; set; }
         public virtual DbSet<Dividends> Dividends { get; set; }
         public virtual DbSet<Product> Product { get; set; }
         public virtual DbSet<TransactionRecord> TransactionRecord { get; set; }
+        public virtual DbSet<Asset> Asset { get; set; }
     }
 }

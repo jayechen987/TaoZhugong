@@ -87,6 +87,7 @@
     <Compile Include="FakeData\FakeTransactionRecord.cs" />
     <Compile Include="Models\Asset\AssetRepositoryTests.cs" />
     <Compile Include="Models\Product\ProductRepositoryTests.cs" />
+    <Compile Include="Models\Transaction\TransactionRepositoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

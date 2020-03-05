@@ -19,7 +19,7 @@ namespace TaoZhugongTests.FakeData
         {
             Seq = 1,
             ProductSeq = FakeProduct.StockProduct1.ProductSeq,
-            Num = FakeTransactionRecord.StockProduct1_TXList.Sum(p => p.Num),
+            Num = FakeTransactionRecord.StockProduct1_TXList.Sum(p => p.InStock),
             TotalPrice = FakeTransactionRecord.StockProduct1_TXList.Sum(p => p.TotalPrice),
         };
 

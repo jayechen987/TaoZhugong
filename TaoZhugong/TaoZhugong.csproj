@@ -1929,6 +1929,7 @@
     <Compile Include="Controllers\AssetController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Controllers\TransactionController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -1967,11 +1968,17 @@
       <DependentUpon>TaoZhugong.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\PartialModel\AssetPartial.cs" />
+    <Compile Include="Models\PartialModel\BookkeppingPartial.cs" />
+    <Compile Include="Models\PartialModel\DividendsPartial.cs" />
     <Compile Include="Models\PartialModel\ProductPartial.cs" />
     <Compile Include="Models\PartialModel\TranscationParital.cs" />
     <Compile Include="Models\Product\IProductRepository.cs" />
     <Compile Include="Models\Product\ProductRepository.cs" />
+    <Compile Include="Models\Transaction\ITransactionRepository.cs" />
+    <Compile Include="Models\Transaction\TransactionRepository.cs" />
+    <Compile Include="Models\ViewModel\TransactionViewModel.cs" />
     <Compile Include="Models\WebProfile\DDLRepository.cs" />
+    <Compile Include="Models\WebProfile\Enum\BookkeepingType.cs" />
     <Compile Include="Models\WebProfile\Enum\EnumTool.cs" />
     <Compile Include="Models\WebProfile\Enum\ProductType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -1993,6 +2000,7 @@
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
     <Content Include="Views\Asset\List.cshtml" />
+    <Content Include="Views\Transaction\AddTransaction.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
