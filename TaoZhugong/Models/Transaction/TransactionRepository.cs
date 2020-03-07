@@ -179,7 +179,7 @@ namespace TaoZhugong.Models.Transaction
         {
             var tranList = dbConnection.QueryableTransactionRecords.OrderBy(p => p.TransactionTime).ThenByDescending(p => p.UnitPrice)
                 .Where(p => p.ProductSeq == transaction.ProductSeq && p.InStock > 0);
-            TransactionRecord updateTransaction = new TransactionRecord();
+            var updateTransaction = new TransactionRecord();
 
             var oddTransaction = tranList.FirstOrDefault(p => p.InStock < 1000);
 
@@ -316,13 +316,12 @@ namespace TaoZhugong.Models.Transaction
         /// <param name="oddLot"></param>
         /// <param name="updateNum"></param>
         /// <param name="updateCost"></param>
-        private void CheckIsOverLotCase(TransactionViewModel transaction, int transNum, TransactionRecord oddLot,
-            ref int updateNum, ref int updateCost)
+        private void CheckIsOverLotCase(TransactionViewModel transaction, int transNum,
+            TransactionRecord oddLot, ref int updateNum, ref int updateCost)
         {
-            int remainderNum;
             if (oddLot.InStock + transNum > 1000)
             {
-                remainderNum = (oddLot.InStock + transNum) % 1000;
+                var remainderNum = (oddLot.InStock + transNum) % 1000;
                 updateNum = transNum - remainderNum;
                 updateCost = updateNum * (int)transaction.UnitPrice;
                 //餘數股票作新增
