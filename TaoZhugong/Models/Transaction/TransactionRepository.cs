@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
+using TaoZhugong.Models.CustomerException;
 using TaoZhugong.Models.DbEntities;
 using TaoZhugong.Models.ViewModel;
 using TaoZhugong.Models.WebProfile.Enum;
@@ -122,10 +123,20 @@ namespace TaoZhugong.Models.Transaction
         /// <param name="dividends"></param>
         public void SetDividendsSchedule(Dividends dividends)
         {
+            if (dividends.ProductSeq==0)
+            {
+                throw new DataKeyIsNullException();
+            }
+
             var ownStuckList = dbConnection.QueryableTransactionRecords.Where(p =>
                 p.ProductSeq == dividends.ProductSeq &&
                 p.SalePrice == null &&
                 p.TransactionTime.Date <= dividends.ExRightDate.Date);
+
+            if (!ownStuckList.Any())
+            {
+                return;
+            }
 
             var addMoney = (int)(ownStuckList.Sum(p => p.Num) * dividends.CashDividends);
             var addStuck = (int)(ownStuckList.Sum(p => p.Num) * dividends.StockDividend * 0.1);
@@ -144,7 +155,6 @@ namespace TaoZhugong.Models.Transaction
                 TransactionTime = DateTime.Now,
             };
 
-            //更新資產(總數/累計配息/累計配股)
             //新增交易紀錄
             AddTransactionLog(transaction);
         }
@@ -268,7 +278,12 @@ namespace TaoZhugong.Models.Transaction
 
         }
 
-
+        /// <summary>
+        /// 根據交易重新計算資產
+        /// </summary>
+        /// <param name="transaction"></param>
+        /// <param name="transNum"></param>
+        /// <param name="transCost"></param>
         public void RecalculateAsset(TransactionViewModel transaction, int transNum, int transCost)
         {
             var asset = dbConnection.QueryableAssets.FirstOrDefault(p => p.ProductSeq == transaction.ProductSeq);
@@ -289,7 +304,7 @@ namespace TaoZhugong.Models.Transaction
         }
 
         /// <summary>
-        /// 根據交易更新Transaction
+        /// 根據交易VM更新Transaction
         /// </summary>
         /// <param name="transaction"></param>
         /// <param name="oddLot"></param>

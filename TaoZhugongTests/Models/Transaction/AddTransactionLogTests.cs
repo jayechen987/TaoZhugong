@@ -11,7 +11,7 @@ using TaoZhugong.Models.DbEntities;
 using TaoZhugong.Models.ViewModel;
 using TaoZhugongTests.FakeData;
 
-namespace TaoZhugong.Models.Transaction.Tests
+namespace TaoZhugong.Models.Tests
 {
     [TestClass()]
     public class AddTransactionLogTests
