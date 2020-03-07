@@ -13,6 +13,7 @@ namespace TaoZhugongTests.FakeData
         {
             StockProduct1,
             StockProduct2,
+            StockProduct1_WithDividends,
         };
 
         public static Asset StockProduct1 => new Asset()
@@ -33,6 +34,17 @@ namespace TaoZhugongTests.FakeData
             Num = FakeTransactionRecord.StockProduct2_TXList.Where(p => p.SalePrice == null).Sum(p => p.Num),
             TotalPrice = FakeTransactionRecord.StockProduct2_TXList.Where(p => p.SalePrice == null).Sum(p => p.TotalPrice),
 
+        };
+
+        public static Asset StockProduct1_WithDividends => new Asset()
+        {
+            Seq = 1,
+            ProductSeq = FakeProduct.StockProduct1.ProductSeq,
+            Num = FakeTransactionRecord.StockProduct1_TX_1.Num,
+            TotalPrice = FakeTransactionRecord.StockProduct1_TX_1.TotalPrice,
+
+            StockDividends = 200,
+            CashDividends = 2000,
         };
     }
 }

@@ -36,6 +36,15 @@ namespace TaoZhugongTests.FakeData
             StockProduct2_TX_2,
         };
 
+        /// <summary>
+        /// 計算各項數值用的清單
+        /// </summary>
+        public static List<TransactionRecord> StockProduct1_WithDividends_TXList => new List<TransactionRecord>()
+        {
+            StockProduct1_TX_1,
+            StockProduct1_TX_2,
+        };
+
         public static TransactionRecord StockProduct1_TX_1 => new TransactionRecord()
         {
             Seq = 1,
@@ -100,6 +109,7 @@ namespace TaoZhugongTests.FakeData
             AdministractionFee = 0,
             TransactionTime = new DateTime(2019, 02, 05),
         };
+        
 
     }
 }

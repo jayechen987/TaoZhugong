@@ -195,7 +195,7 @@ namespace TaoZhugong.Models.Transaction.Tests
             var txViewModel = SetTransactionViewModel(true, product, 600, 20, 23, 0, false);
             var updateTxRecord = FakeTransactionRecord.StockProduct1_TX_2;
             var oddTxRecord = FakeTransactionRecord.StockProduct1_TX_3;
-           
+
 
 
             var except = "Success";
@@ -204,6 +204,32 @@ namespace TaoZhugong.Models.Transaction.Tests
 
             CheckSoldReceived(product, txViewModel, updateTxRecord, oddTxRecord);
             CheckAssetReceived(product, txViewModel, dbAsset, updateTxRecord);
+            dbConnection.Received().SaveChanges();
+        }
+
+        /// <summary>
+        /// 出清全部股票
+        /// </summary>
+        [TestMethod()]
+        public void AddTransactionLog_SoldOutAllStock()
+        {
+            var soldoutAsset = FakeAsset.StockProduct1_WithDividends;
+            //僅有一張記錄
+            dbConnection.QueryableAssets.ReturnsForAnyArgs(
+                new List<Asset>() { soldoutAsset, }.AsQueryable());
+            //僅有一張記錄
+            dbConnection.QueryableTransactionRecords.ReturnsForAnyArgs(
+                new List<TransactionRecord>() { FakeTransactionRecord.StockProduct1_TX_1, }.AsQueryable());
+
+            var txViewModel = SetTransactionViewModel(true, product, 1000, 20, 23, 0, false);
+            var updateTxRecord = FakeTransactionRecord.StockProduct1_TX_1;
+
+            var except = "Success";
+            var actual = transactionRepository.AddTransactionLog(txViewModel);
+            Assert.AreEqual(except, actual);
+
+            CheckSoldReceived(product, txViewModel, updateTxRecord);
+            CheckAssetReceived(product, txViewModel, soldoutAsset, updateTxRecord,true);
             dbConnection.Received().SaveChanges();
         }
 
@@ -249,9 +275,9 @@ namespace TaoZhugong.Models.Transaction.Tests
         /// <param name="product"></param>
         /// <param name="txViewModel">本次的交易資料</param>
         /// <param name="txRecord">傳入的現有零股資料供計算，更新零股交易才會傳值</param>
-        private void CheckBuyReceived(Product product, TransactionViewModel txViewModel, TransactionRecord txRecord=null)
+        private void CheckBuyReceived(Product product, TransactionViewModel txViewModel, TransactionRecord txRecord = null)
         {
-            dbConnection.Received().QueryableTransactionRecords.FirstOrDefault(p => p.ProductSeq == txViewModel.ProductSeq && p.InStock<1000);
+            dbConnection.Received().QueryableTransactionRecords.FirstOrDefault(p => p.ProductSeq == txViewModel.ProductSeq && p.InStock < 1000);
 
             var isUpdateOddLotTx = txViewModel.Num < 1000 && txRecord != null;
             var updateNum = isUpdateOddLotTx ? txRecord.Num + txViewModel.Num : txViewModel.Num;
@@ -281,11 +307,11 @@ namespace TaoZhugong.Models.Transaction.Tests
 
 
             //判斷沒有經過賣出的資料
-            dbConnection.DidNotReceive().Modified(Arg.Is<TransactionRecord>(p => 
-                p.ProductSeq == txViewModel.ProductSeq 
-                && p.InStock==0
+            dbConnection.DidNotReceive().Modified(Arg.Is<TransactionRecord>(p =>
+                p.ProductSeq == txViewModel.ProductSeq
+                && p.InStock == 0
                 ), EntityState.Modified);
-            dbConnection.DidNotReceive().Modified(Arg.Is<TransactionRecord>(p => 
+            dbConnection.DidNotReceive().Modified(Arg.Is<TransactionRecord>(p =>
                 p.ProductSeq == txViewModel.ProductSeq
                 && p.SaleTime == txViewModel.TransactionTime
                 ), EntityState.Modified);
@@ -300,7 +326,7 @@ namespace TaoZhugong.Models.Transaction.Tests
         /// <param name="txViewModel"></param>
         /// <param name="txRecord">賣出時更新的交易資料</param>
         /// <param name="oddTransaction">賣出時被合併的零股資料</param>
-        private void CheckSoldReceived(Product product, TransactionViewModel txViewModel, TransactionRecord txRecord,TransactionRecord oddTransaction=null)
+        private void CheckSoldReceived(Product product, TransactionViewModel txViewModel, TransactionRecord txRecord, TransactionRecord oddTransaction = null)
         {
             dbConnection.Received().QueryableTransactionRecords.OrderBy(p => p.TransactionTime).ThenByDescending(p => p.UnitPrice)
                 .Where(p => p.ProductSeq == txViewModel.ProductSeq && p.InStock > 0);
@@ -313,13 +339,13 @@ namespace TaoZhugong.Models.Transaction.Tests
                 txRecord.InStock += oddTransaction.InStock;
                 txRecord.TotalPrice += oddTransaction.InStock * oddTransaction.UnitPrice;
                 txRecord.UnitPrice = txRecord.TotalPrice / txRecord.InStock;
-               
-                dbConnection.Modified(Arg.Is<TransactionRecord>(p=>
-                    p.Seq==oddTransaction.Seq 
-                    && p.InStock==0
+
+                dbConnection.Modified(Arg.Is<TransactionRecord>(p =>
+                    p.Seq == oddTransaction.Seq
+                    && p.InStock == 0
                     ), EntityState.Modified);
 
-                
+
             }
 
             var updateStock = txRecord.InStock - txViewModel.Num;
@@ -330,7 +356,6 @@ namespace TaoZhugong.Models.Transaction.Tests
                 .Modified(Arg.Is<Bookkeeping>(p => p.ProductSeq == txViewModel.ProductSeq), EntityState.Added);
 
             //判斷沒有經過買入的資料
-           
             dbConnection.DidNotReceive().Modified(Arg.Is<TransactionRecord>(p => p.ProductSeq == product.ProductSeq), EntityState.Added);
             dbConnection.DidNotReceive()
                 .Modified(Arg.Is<TransactionRecord>(p => p.ProductSeq == product.ProductSeq && p.Num == txViewModel.Num),
@@ -345,11 +370,11 @@ namespace TaoZhugong.Models.Transaction.Tests
         /// <param name="dbAsset">資產的資料</param>
         /// <param name="txRecord">賣出時要更新的交易成本</param>
         private void CheckAssetReceived(Product product, TransactionViewModel txViewModel,
-            Asset dbAsset, TransactionRecord txRecord=null)
+            Asset dbAsset, TransactionRecord txRecord = null, bool isSoldOut = false)
         {
             var countNum = txViewModel.SoldStatus ? 0 - txViewModel.Num : txViewModel.Num;
-            var cost = txViewModel.SoldStatus ? 
-                0 - txRecord.UnitPrice* txViewModel.Num : txViewModel.Num * txViewModel.UnitPrice;
+            var cost = txViewModel.SoldStatus ?
+                0 - txRecord.UnitPrice * txViewModel.Num : txViewModel.Num * txViewModel.UnitPrice;
 
             var stockDividends = txViewModel.isDividends
                 ? dbAsset.StockDividends + txViewModel.Num
@@ -360,13 +385,27 @@ namespace TaoZhugong.Models.Transaction.Tests
 
             //計算資產
             dbConnection.Received().QueryableAssets.FirstOrDefault(p => p.ProductSeq == txViewModel.ProductSeq);
-            dbConnection.Received().Modified(Arg.Is<Asset>(p =>
-                p.ProductSeq == product.ProductSeq
-                && p.Num == dbAsset.Num + countNum
-                && p.TotalPrice == dbAsset.TotalPrice + cost
-                && p.StockDividends == stockDividends
-                && p.CashDividends == cashDividends
-            ), EntityState.Modified);
+            if (isSoldOut)
+            {
+                dbConnection.Received().Modified(Arg.Is<Asset>(p =>
+                    p.ProductSeq == product.ProductSeq
+                    && p.Num == 0
+                    && p.TotalPrice == 0
+                    && p.StockDividends == 0
+                    && p.CashDividends == 0
+                ), EntityState.Modified);
+            }
+            else
+            {
+                dbConnection.Received().Modified(Arg.Is<Asset>(p =>
+                    p.ProductSeq == product.ProductSeq
+                    && p.Num == dbAsset.Num + countNum
+                    && p.TotalPrice == dbAsset.TotalPrice + cost
+                    && p.StockDividends == stockDividends
+                    && p.CashDividends == cashDividends
+                ), EntityState.Modified);
+            }
+
         }
 
         #endregion Tool
