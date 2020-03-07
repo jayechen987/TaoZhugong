@@ -14,7 +14,7 @@ using TaoZhugongTests.FakeData;
 namespace TaoZhugong.Models.Transaction.Tests
 {
     [TestClass()]
-    public class TransactionRepositoryTests
+    public class AddTransactionLogTests
     {
         ITaoZhugongDatabaseConnection dbConnection;
         ITransactionRepository transactionRepository;
