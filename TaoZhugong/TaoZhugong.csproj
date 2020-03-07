@@ -2002,6 +2002,8 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
     <Content Include="Views\Asset\List.cshtml" />
     <Content Include="Views\Transaction\AddTransaction.cshtml" />
+    <Content Include="Views\Transaction\Detail.cshtml" />
+    <Content Include="Views\Transaction\AddDividends.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

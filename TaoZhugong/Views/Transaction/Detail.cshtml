@@ -1,0 +1,178 @@
+﻿@model IEnumerable<TaoZhugong.Models.DbEntities.TransactionRecord>
+@{
+    ViewBag.Title = "歷史交易紀錄";
+    var productName = Model.FirstOrDefault().ProductName;
+}
+
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">@ViewBag.Title</h1>
+    <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, please visit the <a target="_blank" href="https://datatables.net">official DataTables documentation</a>.</p>
+
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    <h6 class="m-0 font-weight-bold text-primary">@productName</h6>
+
+                </div>
+                <div class="col-sm-12 col-md-6" style="text-align: right;">
+                    @*<span class="far fa-plus-square" data-toggle="modal" data-target="#transactionEditModal" onclick="GetTransactionEditPage('0')"></span>*@
+                </div>
+            </div>
+
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.Num)</th>
+                            <th>@Html.DisplayNameFor(model => model.UnitPrice)</th>
+                            <th>@Html.DisplayNameFor(model => model.SalePrice)</th>
+                            <th>@Html.DisplayNameFor(model => model.Incomes)</th>
+                            <th>@Html.DisplayNameFor(model => model.ROI)</th>
+                            @*<th>@Html.DisplayNameFor(model => model.Remark)</th>*@
+                            <th>@Html.DisplayNameFor(model => model.TransactionTime)</th>
+                            <th>@Html.DisplayNameFor(model => model.SaleTime)</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.Num)</th>
+                            <th>@Html.DisplayNameFor(model => model.UnitPrice)</th>
+                            <th>@Html.DisplayNameFor(model => model.SalePrice)</th>
+                            <th>@Html.DisplayNameFor(model => model.Incomes)</th>
+                            <th>@Html.DisplayNameFor(model => model.ROI)</th>
+                            @*<th>@Html.DisplayNameFor(model => model.Remark)</th>*@
+                            <th>@Html.DisplayNameFor(model => model.TransactionTime)</th>
+                            <th>@Html.DisplayNameFor(model => model.SaleTime)</th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        @foreach (var item in Model.OrderBy(p => p.TransactionTime))
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.Num)</td>
+                                <td>@Html.DisplayFor(modelItem => item.UnitPrice)</td>
+                                <td>@Html.DisplayFor(modelItem => item.SalePrice)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Incomes)</td>
+                                <td>@Html.DisplayFor(modelItem => item.ROI)</td>
+                                @*<td>@Html.DisplayFor(modelItem => item.Remark)</td>*@
+                                <td>@Html.DisplayFor(modelItem => item.TransactionTime)</td>
+                                <td>@Html.DisplayFor(modelItem => item.SaleTime)</td>
+
+                                <td>
+                                    <span class="far fa-plus-square" data-toggle="modal" data-target="#transactionEditModal" onclick="GetTransactionEditPage(@item.ProductSeq)"></span> |
+                                    <span class="fas fa-file-alt" onclick=""></span> |
+                                    <span class="fas fa-trash-alt" onclick=""></span>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="transactionEditModal" tabindex="-1" role="dialog" aria-labelledby="transactionEditModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">交易紀錄</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert" role="alert"></div>
+                    <div class="modal-body-content"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="postBtn" onclick="PostTransactionForm()">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function() {
+
+        });
+
+        function GetTransactionEditPage(productId) {
+            $.ajax({
+                type: "Get",
+                url: "/Transaction/AddTransaction?type=" +'@ViewBag.AssetType'+ "&productSeq=" + productId,
+                success: function(data) {
+                    $(".modal-body-content").html(data);
+                    //預設交易日為今天
+                    $("#AddTransactionForm").find("[name='TransactionTime']").val('@DateTime.Now.ToString("yyyy-MM-dd")');
+                }
+            });
+        }
+
+        function PostTransactionForm() {
+            //CheckValid
+            if ($("#ProductSeq").val() == "") {
+                ShowAlert("warning", "請選擇產品!");
+                return false;
+            }
+            if (parseInt($("#Num").val())<=0) {
+                ShowAlert("warning", "交易數量必須大於0");
+                return false;
+            }
+            if (parseInt($("#UnitPrice").val())<=0) {
+                ShowAlert("warning", "單價必須大於0");
+                return false;
+            }
+            if (parseInt($("#AdministractionFee").val())<=0) {
+                ShowAlert("warning", "手續費必須大於0");
+                return false;
+            }
+            if ($("#Owner").val() == "") {
+                ShowAlert("warning", "請輸入交易商!");
+                return false;
+            }
+            if ($("#TransactionTime").val() == "") {
+                ShowAlert("warning", "請輸入交易時間!");
+                return false;
+            }
+
+            $.ajax({
+                type: "Post",
+                url: "/Transaction/AddTransaction",
+                data: $("#AddTransactionForm").serialize(),
+                success: function(data) {
+                    if (data == "Success") {
+                        $("#transactionEditModal").modal('toggle');
+                        window.location.reload();
+
+                    } else {
+                        ShowAlert("danger", "系統發生錯誤");
+                        GetTransactionEditPage(productId);
+                    }
+
+                }
+            });
+        }
+
+
+        function ShowAlert(level, msg) {
+            var alertDiv = $("#transactionEditModal").find(".alert");
+            alertDiv.attr("class", "alert alert-" + level);
+            alertDiv.html(msg);
+
+        }
+
+    </script>
+}

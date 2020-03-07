@@ -310,8 +310,8 @@ namespace TaoZhugong.Models.Transaction
         /// <param name="oddLot"></param>
         /// <param name="updateCost"></param>
         /// <param name="updateNum"></param>
-        private void UpdateTransactionRecord(TransactionViewModel transaction, TransactionRecord oddLot, int updateCost,
-            int updateNum)
+        private void UpdateTransactionRecord(TransactionViewModel transaction, TransactionRecord oddLot
+            , int updateCost, int updateNum)
         {
             oddLot.UnitPrice = (oddLot.Num * oddLot.UnitPrice + updateCost) / (oddLot.Num + updateNum);
             oddLot.Num += updateNum;

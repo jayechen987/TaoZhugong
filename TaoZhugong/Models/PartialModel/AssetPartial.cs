@@ -31,7 +31,7 @@ namespace TaoZhugong.Models.DbEntities
             public int CashDividends { get; set; }
 
             [DisplayName("建立時間")]
-            public System.DateTime CreatTime { get; set; }
+            public System.DateTime CreateTime { get; set; }
             [DisplayName("更新時間")]
             public System.DateTime UpdateTime { get; set; }
         }

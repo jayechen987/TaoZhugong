@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using TaoZhugong.Models.DbEntities;
 using TaoZhugong.Models.Transaction;
 using TaoZhugong.Models.ViewModel;
 using TaoZhugong.Models.WebProfile;
@@ -37,5 +38,26 @@ namespace TaoZhugong.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult Detail(int productSeq)
+        {
+            var model = transactionRepository.GetTransactionListByProduct(productSeq);
+            return View(model);
+        }
+
+        public ActionResult AddDividends(int productSeq)
+        {
+            return PartialView(new Dividends() { ProductSeq = productSeq });
+        }
+
+        [HttpPost]
+        public JsonResult AddDividends(Dividends dividends)
+        {
+            var result = "false";
+            if (ModelState.IsValid)
+            {
+                result = transactionRepository.AddDividends(dividends);
+            }
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
     }
 }

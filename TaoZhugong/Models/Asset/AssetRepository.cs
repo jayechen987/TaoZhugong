@@ -50,13 +50,13 @@ namespace TaoZhugong.Models
         {
             var productList = dbConnection.QueryableProducts.Where(p => p.Type == type).ToList();
             var productIdList = productList.Select(p => p.ProductSeq).ToList();
-            var holdTrans = dbConnection.QueryableTransactionRecords.Where(p => p.SalePrice == null);
+            var holdTrans = dbConnection.QueryableTransactionRecords.Where(p => p.SalePrice == null && p.SalePrice>0);
             var returnList = dbConnection.QueryableAssets.Where(p => productIdList.Contains(p.ProductSeq) && p.Num > 0).ToList().Select(p =>
             {
                 p.ProductName = !productList.Any(q => q.ProductSeq == p.ProductSeq) ? "查無產品" :
                     productList.FirstOrDefault(q => q.ProductSeq == p.ProductSeq).ProductName;
                 p.AveragePrice = GetAveragePrice(p);
-                p.BreakevenPoint = GetBreakevenPoint(holdTrans.Where(q => q.ProductSeq == p.ProductSeq));
+                p.BreakevenPoint = GetBreakevenPoint(holdTrans.Where(q => q.ProductSeq == p.ProductSeq).ToList());
                 return p;
             });
 
@@ -82,7 +82,7 @@ namespace TaoZhugong.Models
         /// </summary>
         /// <param name="productTrans">持有的交易紀錄(尚未售出)</param>
         /// <returns></returns>
-        public double GetBreakevenPoint(IQueryable<TransactionRecord> productTrans)
+        public double GetBreakevenPoint(List<TransactionRecord> productTrans)
         {
             return productTrans.Sum(p => p.InStock) == 0 ? 0 :
                 Math.Round(
