@@ -98,7 +98,6 @@ namespace TaoZhugong.Models.Tests
         {
             var editproduct = new Product() { ProductSeq = 1, ProductName = "edit product", ProductValue = "value", Owner = "owner" };
 
-            var except = "Success";
             Action action = () => { productRepository.EditProduct(editproduct); };
             action.Should().Throw<DataNotFoundException>();
 

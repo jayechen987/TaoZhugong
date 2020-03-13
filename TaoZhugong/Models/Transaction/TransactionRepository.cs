@@ -263,7 +263,6 @@ namespace TaoZhugong.Models.Transaction
             //判斷為零股交易且已有零股庫存時走更新流程
             if (transNum < 1000 && oddLot != null)
             {
-                var remainderNum = 0;
                 var updateCost = transCost;
                 var updateNum = transNum;
                 //判斷累加是否成一張

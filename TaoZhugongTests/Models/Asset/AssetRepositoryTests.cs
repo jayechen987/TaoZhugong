@@ -197,7 +197,7 @@ namespace TaoZhugong.Models.Tests
                 SetNewTXWithCostData(3000, 0, 1000),
             };
             var expect = 2;
-            var actual = assetRepository.GetBreakevenPoint(trans.AsQueryable());
+            var actual = assetRepository.GetBreakevenPoint(trans);
             Assert.AreEqual(expect, actual);
 
         }
@@ -215,7 +215,7 @@ namespace TaoZhugong.Models.Tests
                 SetNewTXWithCostData(2000, 500, 1000),
             };
             var expect = 2;
-            var actual = assetRepository.GetBreakevenPoint(trans.AsQueryable());
+            var actual = assetRepository.GetBreakevenPoint(trans);
             Assert.AreEqual(expect, actual);
 
         }
@@ -233,7 +233,7 @@ namespace TaoZhugong.Models.Tests
                 SetNewTXWithCostData(0, 250, 1000),
             };
             var expect = 0.25;
-            var actual = assetRepository.GetBreakevenPoint(trans.AsQueryable());
+            var actual = assetRepository.GetBreakevenPoint(trans);
             Assert.AreEqual(expect, actual);
 
         }
@@ -251,7 +251,7 @@ namespace TaoZhugong.Models.Tests
                 SetNewTXWithCostData(2000, 0, 0),
             };
             var expect = 0;
-            var actual = assetRepository.GetBreakevenPoint(trans.AsQueryable());
+            var actual = assetRepository.GetBreakevenPoint(trans);
             Assert.AreEqual(expect, actual);
 
         }
@@ -272,7 +272,7 @@ namespace TaoZhugong.Models.Tests
                 Num = assetData.Num,
                 TotalPrice = assetData.TotalPrice,
                 AveragePrice = assetRepository.GetAveragePrice(assetData),
-                BreakevenPoint = assetRepository.GetBreakevenPoint(productTXList.AsQueryable()),
+                BreakevenPoint = assetRepository.GetBreakevenPoint(productTXList),
             };
             return expectAsset;
         }

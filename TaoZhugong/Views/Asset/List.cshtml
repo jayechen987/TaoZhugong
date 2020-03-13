@@ -118,14 +118,29 @@
 
 @section scripts {
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
 
-
+            //張數加減控制
+            $(document).on("click", ".btn-number", function () {
+                var type = $(this).attr('data-type');
+                var numObj = $(this).closest(".form-group").find(":input");
+                var num = parseInt(numObj.val());
+                if (type === "minus" && num-1>numObj.attr("min"))
+                {
+                    numObj.val(num - 1);
+                }
+                else if (type === "plus" && num+1<numObj.attr("max"))
+                {
+                    numObj.val(num+1);
+                }
+            });
         });
+
         function GetTransactionEditPage(productId, soldStatus) {
             $.ajax({
                 type: "Get",
-                url: "/Transaction/AddTransaction?type=" + '@ViewBag.AssetType' +
+                url: "/Transaction/AddTransaction?type=" +
+                    '@ViewBag.AssetType' +
                     "&soldStatus=" +
                     soldStatus +
                     "&productSeq=" +
@@ -142,23 +157,23 @@
             var formId = "AddTransactionForm";
             //CheckValid
             if ($("#ProductSeq").val() == "") {
-                ShowAlert(formId, "warning","驗證錯誤!", "請選擇產品");
+                ShowAlert(formId, "warning", "驗證錯誤!", "請選擇產品");
                 return false;
             }
             if (parseInt($("#Num").val()) <= 0) {
-                ShowAlert(formId, "warning", "驗證錯誤!","交易數量必須大於0");
+                ShowAlert(formId, "warning", "驗證錯誤!", "交易數量必須大於0");
                 return false;
             }
             if (parseInt($("#UnitPrice").val()) <= 0) {
-                ShowAlert(formId, "warning", "驗證錯誤!","單價必須大於0");
+                ShowAlert(formId, "warning", "驗證錯誤!", "單價必須大於0");
                 return false;
             }
             if (parseInt($("#AdministractionFee").val()) <= 0) {
-                ShowAlert(formId, "warning", "驗證錯誤!","手續費必須大於0");
+                ShowAlert(formId, "warning", "驗證錯誤!", "手續費必須大於0");
                 return false;
             }
             if ($("#TransactionTime").val() == "") {
-                ShowAlert(formId, "warning","驗證錯誤!", "請輸入交易時間");
+                ShowAlert(formId, "warning", "驗證錯誤!", "請輸入交易時間");
                 return false;
             }
 
@@ -172,7 +187,7 @@
                         window.location.reload();
 
                     } else {
-                        ShowAlert(formId, "danger","系統錯誤", "發生未知錯誤");
+                        ShowAlert(formId, "danger", "系統錯誤", "發生未知錯誤");
                         GetTransactionEditPage(productId);
                     }
 
@@ -198,19 +213,19 @@
             //CheckValid
 
             if ($("#ExRightDate").val() == "") {
-                ShowAlert(formId, "warning","驗證錯誤!", "請輸入除權除息日");
+                ShowAlert(formId, "warning", "驗證錯誤!", "請輸入除權除息日");
                 return false;
             }
             if (parseFloat($("#StockDividend").val()) <= 0) {
-                ShowAlert(formId, "warning", "驗證錯誤!","配股數量必須大於0");
+                ShowAlert(formId, "warning", "驗證錯誤!", "配股數量必須大於0");
                 return false;
             }
             if (parseFloat($("#CashDividends").val()) <= 0) {
-                ShowAlert(formId, "warning", "驗證錯誤!","配息必須大於0");
+                ShowAlert(formId, "warning", "驗證錯誤!", "配息必須大於0");
                 return false;
             }
-             if ($("#DividendDate").val() == "") {
-                ShowAlert(formId, "warning","驗證錯誤!", "請輸入配股發放日");
+            if ($("#DividendDate").val() == "") {
+                ShowAlert(formId, "warning", "驗證錯誤!", "請輸入配股發放日");
                 return false;
             }
 
@@ -218,14 +233,14 @@
             $.ajax({
                 type: "Post",
                 url: "/Transaction/AddDividends",
-                data: $("#"+formId).serialize(),
+                data: $("#" + formId).serialize(),
                 success: function(data) {
                     if (data == "Success") {
                         $("#dividendsEditModal").modal('toggle');
                         window.location.reload();
 
                     } else {
-                        ShowAlert(formId, "danger","系統錯誤", "發生未知錯誤");
+                        ShowAlert(formId, "danger", "系統錯誤", "發生未知錯誤");
                         GetTransactionEditPage(productId);
                     }
 
@@ -233,6 +248,11 @@
             });
         }
 
+        function NumberPlus() {
+            var a = "";
 
+        }
+
+        function NumberMinus() {}
     </script>
 }
