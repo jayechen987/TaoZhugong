@@ -59,5 +59,12 @@ namespace TaoZhugong.Controllers
             }
             return Json(result, JsonRequestBehavior.AllowGet);
         }
+
+        public JsonResult UpdateDividends()
+        {
+            transactionRepository.DividendSchedule();
+
+            return Json("123", JsonRequestBehavior.AllowGet);
+        }
     }
 }

@@ -7,7 +7,7 @@
 
     <div class="form-horizontal">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.Seq)
+        @Html.HiddenFor(model => model.ProductSeq)
 
         <div class="form-group">
             @Html.LabelFor(model => model.ExRightDate, htmlAttributes: new { @class = "control-label col-md-6" })

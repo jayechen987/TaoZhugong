@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
+using System.Xml.Schema;
 using TaoZhugong.Models.CustomerException;
 using TaoZhugong.Models.DbEntities;
 using TaoZhugong.Models.ViewModel;
@@ -63,7 +64,6 @@ namespace TaoZhugong.Models.Transaction
                 Tx_SaleFunction(transaction, out transNum, out cost);
             }
 
-
             try
             {
                 RecalculateAsset(transaction, transNum, cost);
@@ -93,7 +93,10 @@ namespace TaoZhugong.Models.Transaction
                 p.Incomes = bookkeepingList.Any(q => q.RelatedSeq == p.Seq) ? bookkeepingList.FirstOrDefault(q => q.RelatedSeq == p.Seq).Amount : 0;
                 p.ROI = p.SalePrice == null
                     ? "0%"
-                    : Math.Round(((int)((p.SalePrice - p.UnitPrice) * 1000) / p.TotalPrice) * 100, 2) + "%";
+                    : p.UnitPrice == 0 ? "--"
+                    : Math.Round(
+                        (Convert.ToDouble(p.Incomes) /
+                         Convert.ToDouble(p.TotalPrice + p.AdministractionFee + p.SaleTax.Value)) * 100, 2) + "%";
                 return p;
             }).ToList();
         }
@@ -123,7 +126,7 @@ namespace TaoZhugong.Models.Transaction
         /// <param name="dividends"></param>
         public void SetDividendsSchedule(Dividends dividends)
         {
-            if (dividends.ProductSeq==0)
+            if (dividends.ProductSeq == 0)
             {
                 throw new DataKeyIsNullException();
             }
@@ -131,7 +134,7 @@ namespace TaoZhugong.Models.Transaction
             var ownStuckList = dbConnection.QueryableTransactionRecords.Where(p =>
                 p.ProductSeq == dividends.ProductSeq &&
                 p.SalePrice == null &&
-                p.TransactionTime.Date <= dividends.ExRightDate.Date);
+                p.TransactionTime <= dividends.ExRightDate).ToList();
 
             if (!ownStuckList.Any())
             {
@@ -157,13 +160,17 @@ namespace TaoZhugong.Models.Transaction
 
             //新增交易紀錄
             AddTransactionLog(transaction);
+
+            dividends.TransactionRecordSeq = dbConnection.QueryableTransactionRecords.Max(p => p.Seq) + 1;
+            dbConnection.SaveChanges();
+
         }
 
         public void DividendSchedule()
         {
             var today = DateTime.Now.Date;
             var runScheduleList =
-                dbConnection.QueryableDividends.Where(p => p.TransactionRecordSeq == 0 && p.DividendDate.Date <= today);
+                dbConnection.QueryableDividends.Where(p => p.TransactionRecordSeq == 0 && p.DividendDate <= today).ToList();
             foreach (var dividends in runScheduleList)
             {
                 SetDividendsSchedule(dividends);
@@ -199,7 +206,7 @@ namespace TaoZhugong.Models.Transaction
             if (transaction.Num < 1000)
             {
                 //確認資產是否有零股且零股足夠交易
-                if (oddTransaction != null && oddTransaction.InStock > transaction.Num)
+                if (oddTransaction != null && oddTransaction.InStock >= transaction.Num)
                 {
                     updateTransaction = oddTransaction;
                 }
@@ -207,13 +214,13 @@ namespace TaoZhugong.Models.Transaction
                 {
                     //不夠的話賣出整張後把餘額合併到原本的零股
                     updateTransaction.InStock += oddTransaction.InStock;
-                    updateTransaction.TotalPrice += oddTransaction.InStock*oddTransaction.UnitPrice;
-                    updateTransaction.UnitPrice = updateTransaction.TotalPrice /updateTransaction.InStock;
+                    updateTransaction.TotalPrice += oddTransaction.InStock * oddTransaction.UnitPrice;
+                    updateTransaction.UnitPrice = updateTransaction.TotalPrice / updateTransaction.InStock;
 
                     //清除舊有的零股
                     oddTransaction.InStock = 0;
                     oddTransaction.Remark += $"零股賣出合併至編號:{updateTransaction.Seq}";
-                    dbConnection.Modified(oddTransaction,EntityState.Modified);
+                    dbConnection.Modified(oddTransaction, EntityState.Modified);
                 }
             }
 
@@ -222,6 +229,7 @@ namespace TaoZhugong.Models.Transaction
             updateTransaction.SalePrice = transaction.UnitPrice;
             updateTransaction.SaleTax = transaction.Fee;
             updateTransaction.InStock -= transaction.Num;
+            updateTransaction.Remark += $"/ {transaction.Remark}";
 
             dbConnection.Modified(updateTransaction, EntityState.Modified);
 
@@ -245,7 +253,7 @@ namespace TaoZhugong.Models.Transaction
             dbConnection.Modified(newBookkepping, EntityState.Added);
         }
 
-        
+
 
         /// <summary>
         /// 交易紀錄_買入

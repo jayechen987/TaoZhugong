@@ -262,7 +262,7 @@ namespace TaoZhugong.Models.Tests
 
         private Asset GetExpectAssetView(Asset assetData, Product productData, List<TransactionRecord> holdTxList)
         {
-            var productTXList = holdTxList.Where(p => p.ProductSeq == productData.ProductSeq);
+            var productTXList = holdTxList.Where(p => p.ProductSeq == productData.ProductSeq).ToList();
 
             var expectAsset = new Asset()
             {
