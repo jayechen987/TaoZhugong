@@ -61,5 +61,12 @@ namespace TaoZhugong.Models.Transaction
         void Tx_BuyFunction(TransactionViewModel transaction, out int transNum, out int transCost);
 
         void RecalculateAsset(TransactionViewModel transaction, int transNum, int transCost);
+
+        /// <summary>
+        /// 手續費:買進金額*手續費(0.1425%)*折扣
+        /// 稅:買進金額*交易稅(0.3%)
+        /// </summary>
+        /// <returns></returns>
+        int GetFee(int totalPrice, bool isSale);
     }
 }

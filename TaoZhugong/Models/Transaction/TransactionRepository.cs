@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Xml.Schema;
@@ -40,6 +41,7 @@ namespace TaoZhugong.Models.Transaction
                 ProductSeq = productSeq,
                 SoldStatus = soldStatus,
                 isDividends = false,
+                Num = 1000,
             };
         }
 
@@ -54,6 +56,11 @@ namespace TaoZhugong.Models.Transaction
             int transNum = 0;
             //本次成本
             int cost = 0;
+            //如手續費為0且非配股交易則自動帶入
+            transaction.Fee = transaction.Fee == 0 & !transaction.isDividends ? 
+                GetFee((int)(transaction.Num * transaction.UnitPrice), transaction.SoldStatus) 
+                : transaction.Fee;
+
             //買入
             if (!transaction.SoldStatus)
             {
@@ -130,11 +137,11 @@ namespace TaoZhugong.Models.Transaction
             {
                 throw new DataKeyIsNullException();
             }
-
+            //todo 修改配股配息的條件為判斷賣出日
             var ownStuckList = dbConnection.QueryableTransactionRecords.Where(p =>
                 p.ProductSeq == dividends.ProductSeq &&
-                p.SalePrice == null &&
-                p.TransactionTime <= dividends.ExRightDate).ToList();
+                (p.SaleTime == null || p.SaleTime <= dividends.ExRightDate)
+                ).ToList();
 
             if (!ownStuckList.Any())
             {
@@ -161,7 +168,7 @@ namespace TaoZhugong.Models.Transaction
             //新增交易紀錄
             AddTransactionLog(transaction);
 
-            dividends.TransactionRecordSeq = dbConnection.QueryableTransactionRecords.Max(p => p.Seq) + 1;
+            dividends.TransactionRecordSeq = dbConnection.QueryableTransactionRecords.Max(p => p.Seq);
             dbConnection.SaveChanges();
 
         }
@@ -178,6 +185,21 @@ namespace TaoZhugong.Models.Transaction
         }
 
         #endregion Dividends
+
+        /// <summary>
+        /// 手續費:買進金額*手續費(0.1425%)*折扣
+        /// 稅:買進金額*交易稅(0.3%)
+        /// </summary>
+        /// <returns></returns>
+        public int GetFee(int totalPrice, bool isSale)
+        {  
+            var discount = 0.65;
+            var tax = (int)Math.Round(totalPrice * 0.003);
+            var fee = (int)Math.Round(totalPrice * 0.001425 * discount);
+
+
+            return isSale ? fee + tax : fee;
+        }
 
         #region Unit
 

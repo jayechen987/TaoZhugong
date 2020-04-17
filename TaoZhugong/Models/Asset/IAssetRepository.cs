@@ -28,7 +28,7 @@ namespace TaoZhugong.Models
         /// </summary>
         /// <param name="productTrans">持有的交易紀錄(尚未售出)</param>
         /// <returns></returns>
-        double GetBreakevenPoint(List<TransactionRecord> productTrans);
+        double GetBreakevenPoint(List<TransactionRecord> productTrans , Asset asset);
 
     }
 }

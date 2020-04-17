@@ -60,6 +60,12 @@ namespace TaoZhugong.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult GetFee(int totalPrice,bool isSale)
+        {
+            var fee = transactionRepository.GetFee(totalPrice,isSale);
+            return Json(fee, JsonRequestBehavior.AllowGet);
+        }
+
         public JsonResult UpdateDividends()
         {
             transactionRepository.DividendSchedule();

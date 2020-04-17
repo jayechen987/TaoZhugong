@@ -150,7 +150,7 @@ namespace TaoZhugong.Models.Tests
         public void GetAveragePrice_HavePrice()
         {
 
-            var asset = SetAssetCostData(2452, 1000);
+            var asset = SetAssetCostData(2452, 1000,0);
 
             var except = 2.45;
             var actual = assetRepository.GetAveragePrice(asset);
@@ -164,9 +164,23 @@ namespace TaoZhugong.Models.Tests
         public void GetAveragePrice_PriceIsZero()
         {
 
-            var asset = SetAssetCostData(0, 1000);
+            var asset = SetAssetCostData(0, 1000,0);
 
             var except = 0;
+            var actual = assetRepository.GetAveragePrice(asset);
+            Assert.AreEqual(except, actual);
+        }
+
+        /// <summary>
+        /// 已實現股息資產取均數(配股利)
+        /// </summary>
+        [TestMethod]
+        public void GetAveragePrice_CashDividends()
+        {
+
+            var asset = SetAssetCostData(1000, 1000, 500);
+
+            var except = 0.5;
             var actual = assetRepository.GetAveragePrice(asset);
             Assert.AreEqual(except, actual);
         }
@@ -177,7 +191,7 @@ namespace TaoZhugong.Models.Tests
         [TestMethod]
         public void GetAveragePrice_NumIsZero()
         {
-            var asset = SetAssetCostData(1000, 0);
+            var asset = SetAssetCostData(1000, 0,0);
 
             var except = 0;
             var actual = assetRepository.GetAveragePrice(asset);
@@ -196,8 +210,9 @@ namespace TaoZhugong.Models.Tests
                 SetNewTXWithCostData(1000, 0, 1000),
                 SetNewTXWithCostData(3000, 0, 1000),
             };
+            var asset = new Asset();
             var expect = 2;
-            var actual = assetRepository.GetBreakevenPoint(trans);
+            var actual = assetRepository.GetBreakevenPoint(trans, asset);
             Assert.AreEqual(expect, actual);
 
         }
@@ -214,8 +229,9 @@ namespace TaoZhugong.Models.Tests
                 SetNewTXWithCostData(1000, 500, 1000),
                 SetNewTXWithCostData(2000, 500, 1000),
             };
+            var asset = new Asset();
             var expect = 2;
-            var actual = assetRepository.GetBreakevenPoint(trans);
+            var actual = assetRepository.GetBreakevenPoint(trans,asset);
             Assert.AreEqual(expect, actual);
 
         }
@@ -232,8 +248,33 @@ namespace TaoZhugong.Models.Tests
                 SetNewTXWithCostData(0, 250, 1000),
                 SetNewTXWithCostData(0, 250, 1000),
             };
+            var asset = new Asset();
+
             var expect = 0.25;
-            var actual = assetRepository.GetBreakevenPoint(trans);
+            var actual = assetRepository.GetBreakevenPoint(trans,asset);
+            Assert.AreEqual(expect, actual);
+
+        }
+
+        /// <summary>
+        /// 已實現股利取損益平衡點(配股用)
+        /// </summary>
+        [TestMethod]
+        public void GetBreakevenPoint_CashDividends()
+        {
+
+            var trans = new List<TransactionRecord>()
+            {
+                SetNewTXWithCostData(1500, 0, 1000),
+                SetNewTXWithCostData(3000, 0, 1000),
+            };
+            var asset = new Asset()
+            {
+                CashDividends = 500
+            };
+
+            var expect = 2;
+            var actual = assetRepository.GetBreakevenPoint(trans, asset);
             Assert.AreEqual(expect, actual);
 
         }
@@ -250,8 +291,10 @@ namespace TaoZhugong.Models.Tests
                 SetNewTXWithCostData(1000, 0, 0),
                 SetNewTXWithCostData(2000, 0, 0),
             };
+            var asset = new Asset();
+
             var expect = 0;
-            var actual = assetRepository.GetBreakevenPoint(trans);
+            var actual = assetRepository.GetBreakevenPoint(trans,asset);
             Assert.AreEqual(expect, actual);
 
         }
@@ -272,17 +315,18 @@ namespace TaoZhugong.Models.Tests
                 Num = assetData.Num,
                 TotalPrice = assetData.TotalPrice,
                 AveragePrice = assetRepository.GetAveragePrice(assetData),
-                BreakevenPoint = assetRepository.GetBreakevenPoint(productTXList),
+                BreakevenPoint = assetRepository.GetBreakevenPoint(productTXList,assetData),
             };
             return expectAsset;
         }
 
-        private static Asset SetAssetCostData(int totalPrice, int num)
+        private static Asset SetAssetCostData(int totalPrice, int num,int cashDividends)
         {
             var asset = new Asset()
             {
                 TotalPrice = totalPrice,
                 Num = num,
+                CashDividends = cashDividends
             };
             return asset;
         }

@@ -216,12 +216,12 @@
                 ShowAlert(formId, "warning", "驗證錯誤!", "請輸入除權除息日");
                 return false;
             }
-            if (parseFloat($("#StockDividend").val()) <= 0) {
-                ShowAlert(formId, "warning", "驗證錯誤!", "配股數量必須大於0");
+            if (parseFloat($("#StockDividend").val()) < 0) {
+                ShowAlert(formId, "warning", "驗證錯誤!", "配股數量必須大於等於0");
                 return false;
             }
-            if (parseFloat($("#CashDividends").val()) <= 0) {
-                ShowAlert(formId, "warning", "驗證錯誤!", "配息必須大於0");
+            if (parseFloat($("#CashDividends").val()) < 0) {
+                ShowAlert(formId, "warning", "驗證錯誤!", "配息必須大於等於0");
                 return false;
             }
             if ($("#DividendDate").val() == "") {

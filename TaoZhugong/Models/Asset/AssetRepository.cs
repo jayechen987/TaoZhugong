@@ -50,13 +50,14 @@ namespace TaoZhugong.Models
         {
             var productList = dbConnection.QueryableProducts.Where(p => p.Type == type).ToList();
             var productIdList = productList.Select(p => p.ProductSeq).ToList();
-            var holdTrans = dbConnection.QueryableTransactionRecords.Where(p => p.SalePrice == null && p.SalePrice>0);
+            var assetList = dbConnection.QueryableAssets.Where(p =>productIdList.Contains(p.ProductSeq)).ToList();
+            var holdTrans = dbConnection.QueryableTransactionRecords.Where(p => p.SalePrice == null);
             var returnList = dbConnection.QueryableAssets.Where(p => productIdList.Contains(p.ProductSeq) && p.Num > 0).ToList().Select(p =>
             {
                 p.ProductName = !productList.Any(q => q.ProductSeq == p.ProductSeq) ? "查無產品" :
                     productList.FirstOrDefault(q => q.ProductSeq == p.ProductSeq).ProductName;
                 p.AveragePrice = GetAveragePrice(p);
-                p.BreakevenPoint = GetBreakevenPoint(holdTrans.Where(q => q.ProductSeq == p.ProductSeq).ToList());
+                p.BreakevenPoint = GetBreakevenPoint(holdTrans.Where(q => q.ProductSeq == p.ProductSeq).ToList() , assetList.FirstOrDefault(q=>q.ProductSeq==p.ProductSeq));
                 return p;
             });
 
@@ -73,7 +74,7 @@ namespace TaoZhugong.Models
         /// <returns></returns>
         public double GetAveragePrice(Asset asset)
         {
-            return asset.Num == 0 ? 0 : Math.Round(asset.TotalPrice / asset.Num, 2);
+            return asset.Num == 0 ? 0 : Math.Round((asset.TotalPrice -asset.CashDividends) / asset.Num, 2);
         }
 
         /// <summary>
@@ -82,11 +83,12 @@ namespace TaoZhugong.Models
         /// </summary>
         /// <param name="productTrans">持有的交易紀錄(尚未售出)</param>
         /// <returns></returns>
-        public double GetBreakevenPoint(List<TransactionRecord> productTrans)
+        public double GetBreakevenPoint(List<TransactionRecord> productTrans , Asset asset)
         {
+            //todo: 把成交手續費也算進去
             return productTrans.Sum(p => p.InStock) == 0 ? 0 :
                 Math.Round(
-                    (productTrans.Sum(p => p.TotalPrice) + productTrans.Sum(p => p.AdministractionFee))
+                    (productTrans.Sum(p => p.TotalPrice) + productTrans.Sum(p => p.AdministractionFee) - asset.CashDividends )
                     / productTrans.Sum(p => p.InStock)
                     , 2);
         }
