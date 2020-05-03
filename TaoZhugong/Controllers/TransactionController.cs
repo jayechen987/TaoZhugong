@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using TaoZhugong.Models.DbEntities;
+using TaoZhugong.Models.Dividend;
 using TaoZhugong.Models.Transaction;
 using TaoZhugong.Models.ViewModel;
 using TaoZhugong.Models.WebProfile;
@@ -13,10 +14,12 @@ namespace TaoZhugong.Controllers
     public class TransactionController : Controller
     {
         ITransactionRepository transactionRepository;
+        DividendsRepository dividendsRepository;
         private DDLRepository ddlRepository = new DDLRepository();
         public TransactionController()
         {
             transactionRepository = new TransactionRepository();
+            dividendsRepository = new DividendsRepository();
         }
 
         // GET: Transcation
@@ -55,7 +58,7 @@ namespace TaoZhugong.Controllers
             var result = "false";
             if (ModelState.IsValid)
             {
-                result = transactionRepository.AddDividends(dividends);
+                result = dividendsRepository.AddDividends(dividends);
             }
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -68,7 +71,7 @@ namespace TaoZhugong.Controllers
 
         public JsonResult UpdateDividends()
         {
-            transactionRepository.DividendSchedule();
+            dividendsRepository.DividendSchedule();
 
             return Json("123", JsonRequestBehavior.AllowGet);
         }

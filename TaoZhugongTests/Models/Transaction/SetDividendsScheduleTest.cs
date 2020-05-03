@@ -10,6 +10,8 @@ using FluentAssertions;
 using NSubstitute;
 using TaoZhugong.Models.CustomerException;
 using TaoZhugong.Models.DbEntities;
+using TaoZhugong.Models.Dividend;
+using TaoZhugong.Models.ViewModel;
 using TaoZhugongTests.FakeData;
 
 namespace TaoZhugong.Models.Tests
@@ -18,16 +20,19 @@ namespace TaoZhugong.Models.Tests
     public class SetDividendsScheduleTest
     {
         ITaoZhugongDatabaseConnection dbConnection;
+        IDividendsRepository dividendsRepository;
         ITransactionRepository transactionRepository;
 
         [TestInitialize]
         public void TestInitialize()
         {
             dbConnection = Substitute.For<ITaoZhugongDatabaseConnection>();
-            transactionRepository = new TransactionRepository(dbConnection);
+            transactionRepository = Substitute.For<ITransactionRepository>();
+            dividendsRepository = new DividendsRepository(dbConnection, transactionRepository);
 
             dbConnection.QueryableTransactionRecords.Returns(FakeTransactionRecord.transactionRecorList.AsQueryable());
             dbConnection.QueryableAssets.Returns(FakeAsset.AssetList.AsQueryable());
+            transactionRepository.AddTransactionLog(new TransactionViewModel()).ReturnsForAnyArgs("Success");
         }
 
         [TestMethod()]
@@ -37,7 +42,7 @@ namespace TaoZhugong.Models.Tests
 
             Action action = () =>
             {
-                transactionRepository.SetDividendsSchedule(addDividends);
+                dividendsRepository.SetDividendsSchedule(addDividends);
             };
             action.Should().Throw<DataKeyIsNullException>();
 
@@ -57,7 +62,7 @@ namespace TaoZhugong.Models.Tests
         {
             var addDividends = new Dividends() { ProductSeq = 99 };
 
-            transactionRepository.SetDividendsSchedule(addDividends);
+            dividendsRepository.SetDividendsSchedule(addDividends);
 
 
             dbConnection.Received().QueryableTransactionRecords.Where(p =>
@@ -75,7 +80,7 @@ namespace TaoZhugong.Models.Tests
         {
             var addDividends = SetAddDividends(0, 0.5);
 
-            transactionRepository.SetDividendsSchedule(addDividends);
+            dividendsRepository.SetDividendsSchedule(addDividends);
            
             GetStuckDividendsNum(addDividends,out var addStuck,out var addMoney);
 
@@ -91,7 +96,7 @@ namespace TaoZhugong.Models.Tests
             var addDividends = SetAddDividends(0.5, 0);
             GetStuckDividendsNum(addDividends, out var addStuck, out var addMoney);
 
-            transactionRepository.SetDividendsSchedule(addDividends);
+            dividendsRepository.SetDividendsSchedule(addDividends);
 
             CheckDividendsReceived(addDividends, addStuck, addMoney);
 
@@ -102,7 +107,7 @@ namespace TaoZhugong.Models.Tests
             var addDividends = SetAddDividends(0.5, 0.22);
             GetStuckDividendsNum(addDividends, out var addStuck, out var addMoney);
 
-            transactionRepository.SetDividendsSchedule(addDividends);
+            dividendsRepository.SetDividendsSchedule(addDividends);
 
             CheckDividendsReceived(addDividends, addStuck, addMoney);
         }
@@ -136,16 +141,6 @@ namespace TaoZhugong.Models.Tests
             dbConnection.Received().QueryableTransactionRecords.Where(p =>
                 p.ProductSeq == addDividends.ProductSeq && p.SalePrice == null &&
                 p.TransactionTime <= addDividends.ExRightDate.Date);
-            dbConnection.Received().Modified(Arg.Is<TransactionRecord>(p =>
-                p.ProductSeq == addDividends.ProductSeq
-                && p.Num == addStuck
-            ), EntityState.Added);
-            dbConnection.Received().Modified(Arg.Is<Asset>(p =>
-                p.ProductSeq == addDividends.ProductSeq
-                && p.Num == FakeAsset.StockProduct1.Num + addStuck
-                && p.StockDividends == addStuck
-                && p.CashDividends == addMoney
-            ), EntityState.Modified);
             dbConnection.Received().SaveChanges();
         }
     }

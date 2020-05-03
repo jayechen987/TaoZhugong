@@ -1969,6 +1969,8 @@
     <Compile Include="Models\DbEntities\TransactionRecord.cs">
       <DependentUpon>TaoZhugong.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Dividend\DividendsRepository.cs" />
+    <Compile Include="Models\Dividend\IDividendsRepository.cs" />
     <Compile Include="Models\PartialModel\AssetPartial.cs" />
     <Compile Include="Models\PartialModel\BookkeppingPartial.cs" />
     <Compile Include="Models\PartialModel\DividendsPartial.cs" />
