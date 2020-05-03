@@ -88,7 +88,7 @@
     <Compile Include="Models\Asset\AssetRepositoryTests.cs" />
     <Compile Include="Models\Product\ProductRepositoryTests.cs" />
     <Compile Include="Models\Transaction\AddTransactionLogTests.cs" />
-    <Compile Include="Models\Transaction\SetDividendsScheduleTest.cs" />
+    <Compile Include="Models\Dividends\SetDividendsScheduleTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
