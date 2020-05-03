@@ -17,21 +17,25 @@ namespace TaoZhugong.Models.DbEntities
             [DisplayName("產品序號")]
             public int ProductSeq { get; set; }
             [DisplayName("除權除息日")]
+            [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}",
+                ApplyFormatInEditMode = true)]
             public System.DateTime ExRightDate { get; set; }
             [DisplayName("配股")]
             public double StockDividend { get; set; }
             [DisplayName("配息")]
             public double CashDividends { get; set; }
             [DisplayName("配股發放日")]
+            [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}",
+                ApplyFormatInEditMode = true)]
             public System.DateTime DividendDate { get; set; }
             [DisplayName("建立日期")]
+            [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}",
+                ApplyFormatInEditMode = true)]
             public System.DateTime CreateTime { get; set; }
             [DisplayName("關聯交易單號")]
             public int TransactionRecordSeq { get; set; }
             [DisplayName("除權息前股價")]
             public Nullable<double> StockPrice { get; set; }
         }
-        [DisplayName("產品名稱")]
-        public string ProductName { get; set; }
     }
 }

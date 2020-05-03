@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TaoZhugong.Models.DbEntities.Dividends>
+﻿@model IEnumerable<TaoZhugong.Models.ViewModel.DividendViewModel>
 
 @{
     ViewBag.Title = "存股列表";
@@ -31,9 +31,10 @@
                         <tr>
                             <th>@Html.DisplayNameFor(model => model.ProductName)</th>
                             <th>@Html.DisplayNameFor(model => model.ExRightDate)</th>
-                            <th>@Html.DisplayNameFor(model => model.StockDividend)</th>
-                            <th>@Html.DisplayNameFor(model => model.CashDividends)</th>
+                            <th>@Html.DisplayNameFor(model => model.StockDividend) / @Html.DisplayNameFor(model => model.CashDividends)</th>
+                            <th>@Html.DisplayNameFor(model => model.AverageStockDividends) / @Html.DisplayNameFor(model => model.AverageStockDividends)</th>
                             <th>@Html.DisplayNameFor(model => model.DividendDate)</th>
+                            <th>@Html.DisplayNameFor(model => model.RealizedCashDividends)</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -41,9 +42,10 @@
                         <tr>
                             <th>@Html.DisplayNameFor(model => model.ProductName)</th>
                             <th>@Html.DisplayNameFor(model => model.ExRightDate)</th>
-                            <th>@Html.DisplayNameFor(model => model.StockDividend)</th>
-                            <th>@Html.DisplayNameFor(model => model.CashDividends)</th>
+                            <th>@Html.DisplayNameFor(model => model.StockDividend) / @Html.DisplayNameFor(model => model.CashDividends)</th>
+                            <th>@Html.DisplayNameFor(model => model.AverageStockDividends) / @Html.DisplayNameFor(model => model.AverageStockDividends)</th>
                             <th>@Html.DisplayNameFor(model => model.DividendDate)</th>
+                            <th>@Html.DisplayNameFor(model => model.RealizedCashDividends)</th>
                             <th> </th>
                         </tr>
                     </tfoot>
@@ -53,9 +55,10 @@
                             <tr>
                                 <td>@Html.DisplayFor(model => item.ProductName)</td>
                                 <td>@Html.DisplayFor(model => item.ExRightDate)</td>
-                                <td>@Html.DisplayFor(model => item.StockDividend)</td>
-                                <td>@Html.DisplayFor(model => item.CashDividends)</td>
+                                <td>@Html.DisplayFor(model => item.StockDividend) / @Html.DisplayFor(model => item.CashDividends)</td>
+                                <td>@Html.DisplayFor(model => item.AverageStockDividends) / @Html.DisplayFor(model => item.AverageCashDividends)</td>
                                 <td>@Html.DisplayFor(model => item.DividendDate)</td>
+                                <td>@Html.DisplayFor(model => item.RealizedCashDividends)</td>
                                 <td>
                                     <span class="far fa-plus-square" data-toggle="modal" data-target="#transactionEditModal" onclick="GetTransactionEditPage(@item.ProductSeq,false)"></span> |
                                     <span class="far fa-minus-square" data-toggle="modal" data-target="#transactionEditModal" onclick="GetTransactionEditPage(@item.ProductSeq,true)"></span> @*|

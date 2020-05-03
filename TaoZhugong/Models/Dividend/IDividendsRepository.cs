@@ -1,4 +1,6 @@
-﻿using TaoZhugong.Models.DbEntities;
+﻿using System.Collections.Generic;
+using TaoZhugong.Models.DbEntities;
+using TaoZhugong.Models.ViewModel;
 
 namespace TaoZhugong.Models.Dividend
 {
@@ -18,5 +20,6 @@ namespace TaoZhugong.Models.Dividend
         void SetDividendsSchedule(Dividends dividends);
 
         void DividendSchedule();
+        List<DividendViewModel> GetDividendList();
     }
 }

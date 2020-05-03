@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc.Html;
 using TaoZhugong.Models.CustomerException;
 using TaoZhugong.Models.DbEntities;
 using TaoZhugong.Models.Transaction;
@@ -98,6 +99,43 @@ namespace TaoZhugong.Models.Dividend
             {
                 SetDividendsSchedule(dividends);
             }
+        }
+
+        /// <summary>
+        /// 取存股List
+        /// </summary>
+        /// <returns></returns>
+        public List<DividendViewModel> GetDividendList()
+        {
+            var dividendList = dbConnection.QueryableDividends;
+            var seqList = dividendList.Select(p => p.ProductSeq).ToList();
+            var productList = dbConnection.QueryableProducts.Where(p => seqList.Contains(p.ProductSeq));
+            var assertList = dbConnection.QueryableAssets.Where(p => seqList.Contains(p.ProductSeq));
+
+          
+
+            var groupDict = dividendList.GroupBy(p => p.ProductSeq).ToDictionary(p => p.Key, p => p.Count());
+            var returnList = new List<DividendViewModel>();
+
+            foreach (var productSeq in seqList)
+            {
+                var productDividends =
+                    dividendList.OrderByDescending(p => p.CreateTime).Where(p => p.ProductSeq==productSeq);
+                returnList.Add(new DividendViewModel()
+                {
+                    ProductSeq = productSeq,
+                    ProductName = productList.FirstOrDefault(p => p.ProductSeq == p.ProductSeq).ProductName,
+                    StockDividend = productDividends.FirstOrDefault().StockDividend,
+                    CashDividends = productDividends.FirstOrDefault().CashDividends,
+                    ExRightDate = productDividends.FirstOrDefault().ExRightDate,
+                    DividendDate = productDividends.FirstOrDefault().DividendDate,
+                    AverageStockDividends =  productDividends.Sum(p=>p.StockDividend)/ productDividends.Count(),
+                    AverageCashDividends =  productDividends.Sum(p=>p.CashDividends)/ productDividends.Count(),
+                });
+            }
+
+            return returnList;
+
         }
     }
 }

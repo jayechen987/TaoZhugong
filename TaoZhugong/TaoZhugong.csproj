@@ -1981,6 +1981,7 @@
     <Compile Include="Models\CustomerException\DataKeyIsNullException.cs" />
     <Compile Include="Models\Transaction\ITransactionRepository.cs" />
     <Compile Include="Models\Transaction\TransactionRepository.cs" />
+    <Compile Include="Models\ViewModel\DividendViewModel.cs" />
     <Compile Include="Models\ViewModel\TransactionViewModel.cs" />
     <Compile Include="Models\WebProfile\DDLRepository.cs" />
     <Compile Include="Models\WebProfile\Enum\BookkeepingType.cs" />
