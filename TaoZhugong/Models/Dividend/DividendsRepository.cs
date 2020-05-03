@@ -112,9 +112,6 @@ namespace TaoZhugong.Models.Dividend
             var productList = dbConnection.QueryableProducts.Where(p => seqList.Contains(p.ProductSeq));
             var assertList = dbConnection.QueryableAssets.Where(p => seqList.Contains(p.ProductSeq));
 
-          
-
-            var groupDict = dividendList.GroupBy(p => p.ProductSeq).ToDictionary(p => p.Key, p => p.Count());
             var returnList = new List<DividendViewModel>();
 
             foreach (var productSeq in seqList)
@@ -124,13 +121,14 @@ namespace TaoZhugong.Models.Dividend
                 returnList.Add(new DividendViewModel()
                 {
                     ProductSeq = productSeq,
-                    ProductName = productList.FirstOrDefault(p => p.ProductSeq == p.ProductSeq).ProductName,
+                    ProductName = productList.FirstOrDefault(p => p.ProductSeq == productSeq).ProductName,
                     StockDividend = productDividends.FirstOrDefault().StockDividend,
                     CashDividends = productDividends.FirstOrDefault().CashDividends,
                     ExRightDate = productDividends.FirstOrDefault().ExRightDate,
                     DividendDate = productDividends.FirstOrDefault().DividendDate,
                     AverageStockDividends =  productDividends.Sum(p=>p.StockDividend)/ productDividends.Count(),
                     AverageCashDividends =  productDividends.Sum(p=>p.CashDividends)/ productDividends.Count(),
+                    RealizedCashDividends = assertList.FirstOrDefault(p=>p.ProductSeq==productSeq).CashDividends,
                 });
             }
 

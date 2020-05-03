@@ -83,12 +83,14 @@
   </Choose>
   <ItemGroup>
     <Compile Include="FakeData\FakeAsset.cs" />
+    <Compile Include="FakeData\FakeDividends.cs" />
     <Compile Include="FakeData\FakeProduct.cs" />
     <Compile Include="FakeData\FakeTransactionRecord.cs" />
     <Compile Include="Models\Asset\AssetRepositoryTests.cs" />
+    <Compile Include="Models\Dividend\DividendsRepositoryTests.cs" />
     <Compile Include="Models\Product\ProductRepositoryTests.cs" />
     <Compile Include="Models\Transaction\AddTransactionLogTests.cs" />
-    <Compile Include="Models\Dividends\SetDividendsScheduleTest.cs" />
+    <Compile Include="Models\Dividend\SetDividendsScheduleTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
