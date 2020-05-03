@@ -1,0 +1,97 @@
+﻿@model IEnumerable<TaoZhugong.Models.DbEntities.Dividends>
+
+@{
+    ViewBag.Title = "存股列表";
+}
+
+
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">@ViewBag.Title</h1>
+    <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, please visit the <a target="_blank" href="https://datatables.net">official DataTables documentation</a>.</p>
+
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    <h6 class="m-0 font-weight-bold text-primary">@ViewBag.AssetType</h6>
+
+                </div>
+                <div class="col-sm-12 col-md-6" style="text-align: right;">
+                    <span class="far fa-plus-square" data-toggle="modal" data-target="#transactionEditModal" onclick="GetTransactionEditPage('0',false)"></span>
+                </div>
+            </div>
+
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.ProductName)</th>
+                            <th>@Html.DisplayNameFor(model => model.ExRightDate)</th>
+                            <th>@Html.DisplayNameFor(model => model.StockDividend)</th>
+                            <th>@Html.DisplayNameFor(model => model.CashDividends)</th>
+                            <th>@Html.DisplayNameFor(model => model.DividendDate)</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.ProductName)</th>
+                            <th>@Html.DisplayNameFor(model => model.ExRightDate)</th>
+                            <th>@Html.DisplayNameFor(model => model.StockDividend)</th>
+                            <th>@Html.DisplayNameFor(model => model.CashDividends)</th>
+                            <th>@Html.DisplayNameFor(model => model.DividendDate)</th>
+                            <th> </th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(model => item.ProductName)</td>
+                                <td>@Html.DisplayFor(model => item.ExRightDate)</td>
+                                <td>@Html.DisplayFor(model => item.StockDividend)</td>
+                                <td>@Html.DisplayFor(model => item.CashDividends)</td>
+                                <td>@Html.DisplayFor(model => item.DividendDate)</td>
+                                <td>
+                                    <span class="far fa-plus-square" data-toggle="modal" data-target="#transactionEditModal" onclick="GetTransactionEditPage(@item.ProductSeq,false)"></span> |
+                                    <span class="far fa-minus-square" data-toggle="modal" data-target="#transactionEditModal" onclick="GetTransactionEditPage(@item.ProductSeq,true)"></span> @*|
+                                    <span class="fas fa-file-alt" onclick="location.href='/Transaction/Detail?productSeq=@item.ProductSeq'"></span> |
+                                    <span class="fas fa-donate" data-toggle="modal" data-target="#dividendsEditModal" onclick="GetDividendsEditPage(@item.ProductSeq,'@item.ProductName')"></span>*@
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="dividendsEditModal" tabindex="-1" role="dialog" aria-labelledby="dividendsEditModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="dividendsProductName"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="postBtn" onclick="PostDividendsForm()">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+

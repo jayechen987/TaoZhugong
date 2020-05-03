@@ -1928,6 +1928,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AssetController.cs" />
+    <Compile Include="Controllers\DividendsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\TransactionController.cs" />
@@ -2005,6 +2006,7 @@
     <Content Include="Views\Transaction\AddTransaction.cshtml" />
     <Content Include="Views\Transaction\Detail.cshtml" />
     <Content Include="Views\Transaction\AddDividends.cshtml" />
+    <Content Include="Views\Dividends\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
